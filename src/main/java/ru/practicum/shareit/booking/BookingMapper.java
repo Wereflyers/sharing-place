@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class BookingMapper implements RowMapper<Booking> {
     @Override
-    public Booking mapRow (ResultSet rs, int rowNum) throws SQLException {
+    public Booking mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Booking.builder()
                 .userId(rs.getLong("userId"))
                 .itemId(rs.getLong("itemId"))

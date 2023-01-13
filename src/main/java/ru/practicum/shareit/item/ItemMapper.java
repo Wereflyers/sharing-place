@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class ItemMapper implements RowMapper<Item> {
     @Override
-    public Item mapRow (ResultSet rs, int rowNum) throws SQLException {
+    public Item mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Item.builder()
                 .id(rs.getLong("id"))
                 .ownerId(rs.getLong("ownerId"))

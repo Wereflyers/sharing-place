@@ -32,7 +32,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .email(userDto.getEmail())
                 .build();
         for (User u:users.values()) {
-            if(user.getEmail().equals(u.getEmail()))
+            if (user.getEmail().equals(u.getEmail()))
                 throw new DuplicateException("Email is not valid");
         }
         users.put(id, user);
@@ -52,7 +52,7 @@ public class UserRepositoryImpl implements UserRepository {
             user.setName(userDto.getName());
         if (userDto.getEmail() != null) {
             for (User u:users.values()) {
-                if(userDto.getEmail().equals(u.getEmail()))
+                if (userDto.getEmail().equals(u.getEmail()))
                     throw new DuplicateException("Email is not valid");
             }
             user.setEmail(userDto.getEmail());
