@@ -1,20 +1,15 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * TODO Sprint add-item-requests.
- */
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ItemRequestDto {
-    Long id;
+public class ReviewDto {
     Long userId;
-    String name;
-    Boolean added;
+    String description;
 }
