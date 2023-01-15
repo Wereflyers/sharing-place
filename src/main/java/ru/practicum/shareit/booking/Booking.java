@@ -1,17 +1,15 @@
 package ru.practicum.shareit.booking;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
-
-/**
- * TODO Sprint add-bookings.
- */
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking {
     @NonNull
     @Positive
@@ -21,5 +19,5 @@ public class Booking {
     Long itemId;
     LocalDate fromDate;
     LocalDate tillDate;
-    Boolean approved;
+    BookingStatus status;
 }

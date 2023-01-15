@@ -1,19 +1,25 @@
 package ru.practicum.shareit.booking;
 
-import org.springframework.jdbc.core.RowMapper;
+import ru.practicum.shareit.booking.dto.BookingDto;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+public class BookingMapper {
+    public static BookingDto toBookingDto(Booking booking) {
+        return BookingDto.builder()
+                .itemId(booking.getItemId())
+                .userId(booking.getUserId())
+                .fromDate(booking.getFromDate())
+                .tillDate(booking.getTillDate())
+                .status(booking.getStatus())
+                .build();
+    }
 
-public class BookingMapper implements RowMapper<Booking> {
-    @Override
-    public Booking mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public static Booking toBooking(BookingDto bookingDto) {
         return Booking.builder()
-                .userId(rs.getLong("userId"))
-                .itemId(rs.getLong("itemId"))
-                .fromDate(rs.getDate("fromDate").toLocalDate())
-                .tillDate(rs.getDate("tillDate").toLocalDate())
-                .approved(rs.getBoolean("approved"))
+                .itemId(bookingDto.getItemId())
+                .userId(bookingDto.getUserId())
+                .fromDate(bookingDto.getFromDate())
+                .tillDate(bookingDto.getTillDate())
+                .status(bookingDto.getStatus())
                 .build();
     }
 }

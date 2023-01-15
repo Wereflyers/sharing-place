@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto get(long id) {
         if (itemRepository.get(id) == null)
             throw new NullPointerException("Item " + id + " is not found.");
-        return itemRepository.get(id).toItemDto();
+        return ItemMapper.toItemDto(itemRepository.get(id));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
         if (userRepository.get(userId) == null)
             throw new NullPointerException("User " + userId + " is not found");
         itemDto.setOwnerId(userId);
-        return itemRepository.add(itemDto).toItemDto();
+        return ItemMapper.toItemDto(itemRepository.add(itemDto));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.get(id).getOwnerId() != userId)
             throw new NullPointerException("You don't have proper rights.");
         itemDto.setId(id);
-        return itemRepository.update(itemDto).toItemDto();
+        return ItemMapper.toItemDto(itemRepository.update(itemDto));
     }
 
     @Override

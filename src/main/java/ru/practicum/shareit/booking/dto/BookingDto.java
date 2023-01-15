@@ -1,18 +1,18 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.BookingStatus;
 
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
-/**
- * TODO Sprint add-bookings.
- */
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingDto {
-    @NonNull
     @Positive
     Long userId;
     @NonNull
@@ -20,5 +20,5 @@ public class BookingDto {
     Long itemId;
     LocalDate fromDate;
     LocalDate tillDate;
-    Boolean approved;
+    BookingStatus status;
 }

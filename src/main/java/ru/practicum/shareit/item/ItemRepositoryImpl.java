@@ -18,20 +18,14 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<ItemDto> getAllForUser(long userId) {
         return items.values().stream()
                 .filter(item -> item.getOwnerId() == userId)
-                .map(Item::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Item add(ItemDto itemDto) {
-        Item item = Item.builder()
-                .id(id)
-                .ownerId(itemDto.getOwnerId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .rentTimes(itemDto.getRentTimes())
-                .build();
+        itemDto.setId(id);
+        Item item = ItemMapper.toItem(itemDto);
         items.put(id, item);
         id = id + 1;
         return item;
@@ -67,7 +61,7 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .filter(item -> item.getName().toLowerCase().contains(req.toLowerCase())
                 || item.getDescription().toLowerCase().contains(req.toLowerCase()))
                 .filter(Item::getAvailable)
-                .map(Item::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 }

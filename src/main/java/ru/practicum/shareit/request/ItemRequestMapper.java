@@ -1,19 +1,26 @@
 package ru.practicum.shareit.request;
 
-import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 
+public class ItemRequestMapper {
+    public static ItemRequestDto toItemRequestDto(ItemRequest itemRequest) {
+        return ItemRequestDto.builder()
+                .id(itemRequest.getId())
+                .name(itemRequest.getName())
+                .userId(itemRequest.getUserId())
+                .created(itemRequest.getCreated())
+                .added(itemRequest.getAdded())
+                .build();
+    }
 
-public class ItemRequestMapper implements RowMapper<ItemRequest> {
-    @Override
-    public ItemRequest mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
         return ItemRequest.builder()
-                .id(rs.getLong("id"))
-                .userId(rs.getLong("userId"))
-                .name(rs.getString("name"))
-                .added(rs.getBoolean("added"))
+                .id(itemRequestDto.getId())
+                .name(itemRequestDto.getName())
+                .userId(itemRequestDto.getUserId())
+                .created(itemRequestDto.getCreated())
+                .added(itemRequestDto.getAdded())
                 .build();
     }
 }

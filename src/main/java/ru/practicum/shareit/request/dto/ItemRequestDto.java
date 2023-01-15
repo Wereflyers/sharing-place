@@ -1,20 +1,19 @@
 package ru.practicum.shareit.request.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-/**
- * TODO Sprint add-item-requests.
- */
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequestDto {
     Long id;
     Long userId;
     String name;
+    LocalDateTime created;
     Boolean added;
 }

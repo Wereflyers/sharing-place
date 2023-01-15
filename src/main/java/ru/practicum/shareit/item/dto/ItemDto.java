@@ -1,16 +1,15 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Positive;
 
-/**
- * TODO Sprint add-controllers.
- */
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     @Positive
     Long id;

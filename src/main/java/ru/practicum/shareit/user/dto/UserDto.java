@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.dto;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Positive;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Positive;
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     @Positive
     Long id;

@@ -1,18 +1,13 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import ru.practicum.shareit.item.dto.ItemDto;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-/**
- * TODO Sprint add-controllers.
- */
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
     Long id;
     String name;
@@ -20,15 +15,4 @@ public class Item {
     Boolean available;
     Long ownerId;
     Long rentTimes;
-
-    public ItemDto toItemDto() {
-        return ItemDto.builder()
-                .id(getId())
-                .ownerId(getOwnerId())
-                .name(getName())
-                .description(getDescription())
-                .available(getAvailable())
-                .rentTimes(getRentTimes())
-                .build();
-    }
 }

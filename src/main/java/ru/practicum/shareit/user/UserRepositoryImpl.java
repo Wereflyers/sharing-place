@@ -20,17 +20,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<UserDto> getAll() {
         return users.values().stream()
-                .map(User::toUserDto)
+                .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public User add(UserDto userDto) {
-        User user = User.builder()
-                .id(id)
-                .name(userDto.getName())
-                .email(userDto.getEmail())
-                .build();
+        userDto.setId(id);
+        User user = UserMapper.toUser(userDto);
         for (User u:users.values()) {
             if (user.getEmail().equals(u.getEmail()))
                 throw new DuplicateException("Email is not valid");

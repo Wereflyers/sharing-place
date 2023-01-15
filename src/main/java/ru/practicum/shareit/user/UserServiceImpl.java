@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public UserDto get(long id) {
         if (userRepository.get(id) == null)
             throw new NullPointerException("User " + id + "is not found.");
-        return userRepository.get(id).toUserDto();
+        return UserMapper.toUserDto(userRepository.get(id));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     public UserDto add(UserDto user) {
         if (user.getEmail() == null)
             throw new ValidationException("Email is null");
-        return userRepository.add(user).toUserDto();
+        return UserMapper.toUserDto(userRepository.add(user));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.get(id) == null)
             throw new NullPointerException("User " + id + " is not found.");
         user.setId(id);
-        return userRepository.update(user).toUserDto();
+        return UserMapper.toUserDto(userRepository.update(user));
     }
 
     @Override
