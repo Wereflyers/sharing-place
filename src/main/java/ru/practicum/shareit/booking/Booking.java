@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 @AllArgsConstructor

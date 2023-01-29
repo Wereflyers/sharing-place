@@ -3,8 +3,6 @@ package ru.practicum.shareit.booking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
