@@ -16,6 +16,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredi
      * @return List
      */
     List<Item> findAllByOwnerId(long userId);
+
     List<Item> findByNameContainsIgnoreCase(String req);
 
     /**

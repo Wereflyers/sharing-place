@@ -38,8 +38,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
      * @param toDate - текущая дата
      * @return List
      */
-    List<Booking> findAllByOwnerIdAndFromDateIsBeforeAndTillDateIsAfterOrderByFromDate
-            (Long userId, LocalDate date, LocalDate toDate);
+    List<Booking> findAllByOwnerIdAndFromDateIsBeforeAndTillDateIsAfterOrderByFromDate(
+            Long userId, LocalDate date, LocalDate toDate);
 
     /**
      * Показывает все бронирования пользователя с выбранным статусом.
