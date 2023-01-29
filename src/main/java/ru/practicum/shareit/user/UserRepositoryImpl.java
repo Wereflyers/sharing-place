@@ -12,18 +12,8 @@ import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
-public class UserRepositoryImpl implements UserRepository {
-
-    private static long id = 1;
-    private final Map<Long, User> users = new HashMap<>();
-
-    @Override
-    public List<UserDto> getAll() {
-        return users.values().stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
-    }
-
+public class UserRepositoryImpl {
+/*
     @Override
     public User add(UserDto userDto) {
         userDto.setId(id);
@@ -35,11 +25,6 @@ public class UserRepositoryImpl implements UserRepository {
         users.put(id, user);
         id = id + 1;
         return user;
-    }
-
-    @Override
-    public User get(long id) {
-        return users.get(id);
     }
 
     @Override
@@ -57,10 +42,5 @@ public class UserRepositoryImpl implements UserRepository {
         users.remove(user.getId());
         users.put(user.getId(), user);
         return users.get(user.getId());
-    }
-
-    @Override
-    public boolean delete(long id) {
-        return users.remove(id) != null;
-    }
+    }*/
 }

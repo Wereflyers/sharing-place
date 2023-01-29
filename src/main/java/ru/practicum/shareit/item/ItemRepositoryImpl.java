@@ -10,18 +10,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
-public class ItemRepositoryImpl implements ItemRepository {
-    private static long id = 1;
-    private final Map<Long, Item> items = new HashMap<>();
-
-    @Override
-    public List<ItemDto> getAllForUser(long userId) {
-        return items.values().stream()
-                .filter(item -> item.getOwnerId() == userId)
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
-    }
-
+public class ItemRepositoryImpl {
+/*
     @Override
     public Item add(ItemDto itemDto) {
         itemDto.setId(id);
@@ -29,11 +19,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         items.put(id, item);
         id = id + 1;
         return item;
-    }
-
-    @Override
-    public Item get(long id) {
-        return items.get(id);
     }
 
     @Override
@@ -51,11 +36,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public boolean delete(long id) {
-        return items.remove(id) != null;
-    }
-
-    @Override
     public List<ItemDto> search(String req) {
         return items.values().stream()
                 .filter(item -> item.getName().toLowerCase().contains(req.toLowerCase())
@@ -63,5 +43,5 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 }
