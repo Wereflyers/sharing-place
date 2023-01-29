@@ -55,15 +55,15 @@ public class BookingServiceImpl implements BookingService {
             case ALL:
                 return BookingMapper.toBookingDtoList(bookingRepository.findAllByOwnerIdOrderByFromDate(userId));
             case PAST:
-                return BookingMapper.toBookingDtoList
-                        (bookingRepository.findAllByOwnerIdAndTillDateIsBeforeOrderByFromDate(userId, LocalDate.now()));
+                return BookingMapper.toBookingDtoList(
+                        bookingRepository.findAllByOwnerIdAndTillDateIsBeforeOrderByFromDate(userId, LocalDate.now()));
             case FUTURE:
-                return BookingMapper.toBookingDtoList
-                        (bookingRepository.findAllByOwnerIdAndFromDateIsAfterOrderByFromDate(userId, LocalDate.now()));
+                return BookingMapper.toBookingDtoList(
+                        bookingRepository.findAllByOwnerIdAndFromDateIsAfterOrderByFromDate(userId, LocalDate.now()));
             case CURRENT:
                 return BookingMapper.toBookingDtoList(
-                        bookingRepository.findAllByOwnerIdAndFromDateIsBeforeAndTillDateIsAfterOrderByFromDate
-                                (userId, LocalDate.now(), LocalDate.now()));
+                        bookingRepository.findAllByOwnerIdAndFromDateIsBeforeAndTillDateIsAfterOrderByFromDate(
+                                userId, LocalDate.now(), LocalDate.now()));
             case WAITING:
                 return BookingMapper.toBookingDtoList(
                         bookingRepository.findAllByOwnerIdAndStatusOrderByFromDate(userId, BookingStatus.WAITING));
