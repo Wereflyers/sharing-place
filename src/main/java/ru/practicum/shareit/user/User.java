@@ -2,11 +2,8 @@ package ru.practicum.shareit.user;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @NoArgsConstructor
