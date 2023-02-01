@@ -1,13 +1,13 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> {
+public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item>, ItemRepositoryCustom {
 
     /**
      * Вывод списка всех вещей, которые принадлежат конкретному пользователю.
@@ -17,29 +17,16 @@ public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredi
      */
     List<Item> findAllByOwnerId(long userId);
 
-    List<Item> findByNameContainsIgnoreCase(String req);
-
     /**
      * Поиск вещей, доступных для бронирования, по названию и описанию.
      *
      * @param req - текст поиска
      * @return List
      */
-    List<ItemDto> search(String req);
+    @Query("select i from Item i " +
+            "where (upper(i.name)  like upper(concat('%', ?1, '%')) " +
+            "or upper(i.description) like upper(concat('%', ?1, '%'))) " +
+            "and i.available = true ")
+    List<Item> search(String req);
 
-    /**
-     * Добавление вещи на сайт.
-     *
-     * @param itemDto - описание вещи
-     * @return Item
-     */
-    Item add(ItemDto itemDto);
-
-    /**
-     * Обновление информации о вещи (доступно только хозяину вещи).
-     *
-     * @param itemDto - описание вещи
-     * @return Item
-     */
-    Item update(ItemDto itemDto);
 }

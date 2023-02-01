@@ -1,19 +1,23 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-public interface BookingRepository extends JpaRepository<Booking, Long>, QuerydslPredicateExecutor<Booking>, BookingRepositoryCustom {
+public interface BookingRepository extends JpaRepository<Booking, Long>, QuerydslPredicateExecutor<Booking>,
+        BookingRepositoryCustom {
 
     /**
      * Показывает все бронирования пользователя, отсортированные по дате.
      * @param userId - автор бронирований
      * @return List
      */
-    List<Booking> findAllByOwnerIdOrderByFromDate(Long userId);
+    List<Booking> findAllByBookerIdOrderByStart(Long userId);
 
     /**
      * Показывает все завершенные бронирования пользователя, отсортированные по дате.
@@ -21,7 +25,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
      * @param date - текущая дата
      * @return List
      */
-    List<Booking> findAllByOwnerIdAndTillDateIsBeforeOrderByFromDate(Long userId, LocalDate date);
+    List<Booking> findAllByBookerIdAndEndIsBeforeOrderByStart(Long userId, LocalDateTime date);
 
     /**
      * Показывает все будущие бронирования пользователя, отсортированные по дате.
@@ -29,7 +33,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
      * @param date - текущая дата
      * @return List
      */
-    List<Booking> findAllByOwnerIdAndFromDateIsAfterOrderByFromDate(Long userId, LocalDate date);
+    List<Booking> findAllByBookerIdAndStartIsAfterOrderByStart(Long userId, LocalDateTime date);
 
     /**
      * Показывает все текущие бронирования пользователя, отсортированные по дате.
@@ -38,8 +42,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
      * @param toDate - текущая дата
      * @return List
      */
-    List<Booking> findAllByOwnerIdAndFromDateIsBeforeAndTillDateIsAfterOrderByFromDate(
-            Long userId, LocalDate date, LocalDate toDate);
+    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStart(
+            Long userId, LocalDateTime date, LocalDateTime toDate);
 
     /**
      * Показывает все бронирования пользователя с выбранным статусом.
@@ -47,5 +51,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
      * @param status - статус бронирования
      * @return List
      */
-    List<Booking> findAllByOwnerIdAndStatusOrderByFromDate(Long userId, BookingStatus status);
+    List<Booking> findAllByBookerIdAndStatusOrderByStart(Long userId, BookingStatus status);
 }

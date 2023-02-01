@@ -7,22 +7,19 @@ public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
-                .ownerId(item.getOwnerId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .rentTimes(item.getRentTimes())
                 .build();
     }
 
-    public static Item toItem(ItemDto itemDto) {
+    public static Item toItem(ItemDto itemDto, Long ownerId) {
         return Item.builder()
                 .id(itemDto.getId())
-                .ownerId(itemDto.getOwnerId())
+                .ownerId(ownerId)
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
-                .rentTimes(itemDto.getRentTimes())
                 .build();
     }
 }

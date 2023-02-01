@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.ArrayList;
@@ -11,10 +13,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+
+    @Autowired
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+        this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<ItemDto> getAllForUser(long userId) {
@@ -33,25 +41,27 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto add(long userId, ItemDto itemDto) {
         validateItem(itemDto);
         if (userRepository.findById(userId).isEmpty())
             throw new NullPointerException("User " + userId + " is not found");
-        itemDto.setOwnerId(userId);
-        return ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItem(itemDto)));
+        return ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItem(itemDto, userId)));
     }
 
     @Override
+    @Transactional
     public ItemDto update(long userId, long id, ItemDto itemDto) {
         if (itemRepository.findById(id).isEmpty())
             throw new NullPointerException("Item " + id + " is not found.");
         if (itemRepository.findById(id).get().getOwnerId() != userId)
             throw new NullPointerException("You don't have proper rights.");
         itemDto.setId(id);
-        return ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItem(itemDto)));
+        return ItemMapper.toItemDto(itemRepository.update(ItemMapper.toItem(itemDto, userId)));
     }
 
     @Override
+    @Transactional
     public void delete(long userId, long id) {
         if (itemRepository.findById(id).isEmpty())
             throw new NullPointerException("Item " + id + " is not found.");
@@ -64,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> search(String req) {
         if (req.isBlank())
             return new ArrayList<>();
-        return itemRepository.findByNameContainsIgnoreCase(req).stream()
+        return itemRepository.search(req).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }

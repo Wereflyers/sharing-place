@@ -1,19 +1,27 @@
 package ru.practicum.shareit.user;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.DuplicateException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDto get(long id) {
@@ -30,21 +38,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto add(UserDto userDto) {
         if (userDto.getEmail() == null)
             throw new ValidationException("Email is null");
-        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+        try {
+            return UserMapper.toUserDto(userRepository.save(UserMapper.toUserWithoutId(userDto)));
+        } catch (Exception e) {
+            throw new DuplicateException(e.getMessage());
+        }
     }
 
     @Override
+    @Transactional
     public UserDto update(long id, UserDto userDto) {
         if (userRepository.findById(id).isEmpty())
             throw new NullPointerException("User " + id + " is not found.");
-        userDto.setId(id);
-        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+        try {
+            return UserMapper.toUserDto(userRepository.update(UserMapper.toUser(userDto, id)));
+        } catch (Exception e) {
+        throw new DuplicateException(e.getMessage());
+        }
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
         if (userRepository.findById(id).isEmpty())
             throw new NullPointerException("User " + id + "is not found.");

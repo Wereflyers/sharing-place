@@ -12,15 +12,9 @@ import javax.validation.constraints.Positive;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    @Min(1)
-    @Positive
     Long id;
 
     String name;
     String description;
     Boolean available;
-    @Positive
-    @NonNull
-    Long ownerId;
-    Long rentTimes;
 }

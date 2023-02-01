@@ -1,39 +1,33 @@
 package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.DuplicateException;
+import java.util.Objects;
 
 @Repository
 @Slf4j
-public class UserRepositoryImpl {
-/*
-    @Override
-    public User add(UserDto userDto) {
-        userDto.setId(id);
-        User user = UserMapper.toUser(userDto);
-        for (User u:users.values()) {
-            if (user.getEmail().equals(u.getEmail()))
-                throw new DuplicateException("Email is not valid");
-        }
-        users.put(id, user);
-        id = id + 1;
-        return user;
+public class UserRepositoryImpl implements UserRepositoryCustom {
+
+    private final UserRepository userRepository;
+
+    public UserRepositoryImpl(@Lazy UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public User update(UserDto userDto) {
-        User user = users.get(userDto.getId());
-        if (userDto.getName() != null)
-            user.setName(userDto.getName());
-        if (userDto.getEmail() != null) {
-            for (User u:users.values()) {
-                if (userDto.getEmail().equals(u.getEmail()))
-                    throw new DuplicateException("Email is not valid");
+    public User update(User user) {
+        User newUser = userRepository.findById(user.getId()).get();
+        if (user.getEmail() != null) {
+            if(userRepository.findAllByEmail(user.getEmail()).size() > 0 &&
+                    !Objects.equals(userRepository.findAllByEmail(user.getEmail()).get(0).getId(), user.getId())) {
+                throw new DuplicateException("Email already exist.");
             }
-            user.setEmail(userDto.getEmail());
+            newUser.setEmail(user.getEmail());
         }
-        users.remove(user.getId());
-        users.put(user.getId(), user);
-        return users.get(user.getId());
-    }*/
+        if (user.getName() != null)
+            newUser.setName(user.getName());
+        return userRepository.save(newUser);
+    }
 }
