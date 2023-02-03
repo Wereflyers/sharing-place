@@ -3,7 +3,10 @@ package ru.practicum.shareit.item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentForResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemForResponse;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,22 +23,23 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemForResponse> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.getAllForUser(userId);
     }
 
     @GetMapping("/{id}")
-    public ItemDto get(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id) {
+    public ItemForResponse get(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id) {
         return itemService.get(id);
     }
 
     @PostMapping
-    public ItemDto add(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto itemDto) {
+    public ItemForResponse add(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto itemDto) {
         return itemService.add(userId, itemDto);
     }
 
     @PatchMapping("/{id}")
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id, @Valid @RequestBody ItemDto itemDto) {
+    public ItemForResponse update(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id,
+                                  @Valid @RequestBody ItemDto itemDto) {
         return itemService.update(userId, id, itemDto);
     }
 
@@ -45,7 +49,13 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam("text") String req) {
+    public List<ItemForResponse> search(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam("text") String req) {
         return itemService.search(req);
+    }
+
+    @PostMapping("/{id}/comment")
+    public CommentForResponse addComment(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id,
+                                         @RequestBody CommentDto commentDto) {
+        return itemService.addComment(userId, id, commentDto);
     }
 }

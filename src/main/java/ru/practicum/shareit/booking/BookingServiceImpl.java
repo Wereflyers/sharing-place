@@ -6,12 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingForResponse;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +36,9 @@ public class BookingServiceImpl implements BookingService {
         if (userRepository.findById(userId).isEmpty()) {
             throw new NullPointerException("User " + userId + " is not found");
         }
+        if (Objects.equals(itemRepository.findById(bookingDto.getItemId()).get().getOwnerId(), userId)) {
+            throw new NullPointerException("Incorrect request");
+        }
         if (!itemRepository.findById(bookingDto.getItemId()).get().getAvailable()) {
             throw new ValidationException("Item is unavailable.");
         }
@@ -47,6 +47,9 @@ public class BookingServiceImpl implements BookingService {
         }
         if (bookingDto.getStatus() == null) {
             bookingDto.setStatus(BookingStatus.WAITING);
+        }
+        if (bookingRepository.getBookings(userId, State.CURRENT).size() > 0) {
+            throw new NullPointerException("User is not available");
         }
         Long ownerId = itemRepository.findById(bookingDto.getItemId()).get().getOwnerId();
         return createResponse(bookingRepository.save(BookingMapper.toBookingWithoutId(bookingDto, userId, ownerId)));
@@ -60,6 +63,9 @@ public class BookingServiceImpl implements BookingService {
             throw new NullPointerException("You don't have rights for this.");
         }
         Booking booking = bookingRepository.findById(id).get();
+        if (booking.getStatus() == BookingStatus.APPROVED) {
+            throw new IllegalArgumentException("Already approved");
+        }
         if (approved) {
             booking.setStatus(BookingStatus.APPROVED);
         } else
@@ -83,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
         if (userRepository.findById(userId).isEmpty()) {
             throw new NullPointerException("User " + userId + " is not found");
         }
-        if (bookingRepository.findAllByBookerIdOrderByStart(userId) == null) {
+        if (bookingRepository.findAllByBookerIdOrderByStartDesc(userId) == null) {
             return new ArrayList<>();
         }
         List<Booking> bookings = bookingRepository.getBookings(userId, state);
@@ -94,7 +100,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingForResponse> getAllForItems(Long userId, State state) {
-        return null;
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new NullPointerException("User " + userId + " is not found");
+        }
+        if (bookingRepository.findAllByOwnerIdOrderByStartDesc(userId) == null) {
+            return new ArrayList<>();
+        }
+        List<Booking> bookings = bookingRepository.getBookingsForItems(userId, state);
+        return bookings.stream()
+                .map(this::createResponse)
+                .collect(Collectors.toList());
     }
 
     private void validateBooking(Long id, Long userId) {
@@ -108,6 +123,6 @@ public class BookingServiceImpl implements BookingService {
 
     private BookingForResponse createResponse(Booking booking) {
         return BookingMapper.toBookingForResponse(booking,
-                ItemMapper.toItemDto(itemRepository.findById(booking.getItemId()).get()));
+                itemRepository.findById(booking.getItemId()).get());
     }
 }

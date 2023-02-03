@@ -44,3 +44,31 @@ create table if not exists BOOKINGS
         foreign key (OWNER_ID) references USERS
             on update cascade on delete cascade
 );
+
+create table REQUESTS
+(
+    ID           BIGINT auto_increment,
+    DESCRIPTION  CHARACTER VARYING,
+    REQUESTOR_ID BIGINT not null,
+    constraint REQUESTS_PK
+        primary key (ID),
+    constraint REQUESTS_USERS_USER_ID_FK
+        foreign key (REQUESTOR_ID) references USERS
+            on update cascade on delete cascade
+);
+
+create table COMMENTS
+(
+    ID        BIGINT auto_increment
+        primary key,
+    TEXT      CHARACTER VARYING not null,
+    ITEM_ID   BIGINT            not null,
+    AUTHOR_ID BIGINT            not null,
+    CREATED  TIMESTAMP WITHOUT TIME ZONE        not null,
+    constraint COMMENTS_ITEMS_ITEM_ID_FK
+        foreign key (ITEM_ID) references ITEMS
+            on update cascade on delete cascade,
+    constraint COMMENTS_USERS_USER_ID_FK
+        foreign key (AUTHOR_ID) references USERS
+            on update cascade on delete cascade
+);

@@ -8,7 +8,7 @@ public class ErrorResponse {
     private final String message;
 
     public ErrorResponse(String message) {
-        name = "name";
+        name = "Error message";
         this.message = message;
     }
 }
