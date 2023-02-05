@@ -20,7 +20,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     public User update(User user) {
         User newUser = userRepository.findById(user.getId()).get();
         if (user.getEmail() != null) {
-            if(userRepository.findAllByEmail(user.getEmail()).size() > 0 &&
+            if (userRepository.findAllByEmail(user.getEmail()).size() > 0 &&
                     !Objects.equals(userRepository.findAllByEmail(user.getEmail()).get(0).getId(), user.getId())) {
                 throw new DuplicateException("Email already exist.");
             }
