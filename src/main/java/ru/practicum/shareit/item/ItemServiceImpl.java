@@ -94,6 +94,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public CommentForResponse addComment(long userId, long itemId, CommentDto commentDto) {
         if (commentDto.getText() == null || commentDto.getText().isBlank()) {
             throw new ValidationException("Text is empty");
