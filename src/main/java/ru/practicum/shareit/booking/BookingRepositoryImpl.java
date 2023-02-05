@@ -56,7 +56,7 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
                         .collect(Collectors.toList());
             case FUTURE:
                 return bookingRepository.findAllByOwnerIdOrderByStartDesc(userId).stream()
-                        .filter(b -> b.getStart().isAfter(LocalDateTime.now()))
+                        .filter(b -> b.getEnd().isAfter(LocalDateTime.now()))
                         .collect(Collectors.toList());
             case CURRENT:
                 return bookingRepository.findAllByOwnerIdOrderByStartDesc(userId).stream()
@@ -74,8 +74,12 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
 
     @Override
     public Booking getLastItemBooking(Long itemId) {
-        List<Booking> bookings = bookingRepository.findAllByItemIdAndStartIsBeforeOrderByStart(
-                itemId, LocalDateTime.now());
+        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
+                itemId).stream()
+                .filter(b -> (b.getStart().isBefore(LocalDateTime.now())))
+                .filter(b -> (b.getStatus() == BookingStatus.APPROVED))
+                .filter(b -> (b.getEnd().isBefore(LocalDateTime.now())))
+                .collect(Collectors.toList());
         if (bookings.size() == 0) {
             return null;
         } else {
@@ -85,8 +89,11 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
 
     @Override
     public Booking getNextItemBooking(Long itemId) {
-        List<Booking> bookings = bookingRepository.findAllByItemIdAndStartIsAfterOrderByStart(
-                itemId, LocalDateTime.now());
+        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
+                itemId).stream()
+                .filter(b -> (b.getStart().isAfter(LocalDateTime.now())))
+                .filter(b -> (b.getStatus() == BookingStatus.APPROVED))
+                .collect(Collectors.toList());
         if (bookings.size() == 0) {
             return null;
         } else {

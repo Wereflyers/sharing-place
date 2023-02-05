@@ -118,8 +118,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private ItemForResponse createResponse(Item item) {
-        BookingShort lastBooking = new BookingShort();
-        BookingShort nextBooking = new BookingShort();
+        BookingShort lastBooking = null;
+        BookingShort nextBooking = null;
         if (bookingRepository.getLastItemBooking(item.getId()) != null){
             lastBooking = new BookingShort(bookingRepository.getLastItemBooking(item.getId()));
         }
