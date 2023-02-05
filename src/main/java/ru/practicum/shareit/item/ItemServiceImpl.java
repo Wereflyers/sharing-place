@@ -120,10 +120,10 @@ public class ItemServiceImpl implements ItemService {
     private ItemForResponse createResponse(Item item) {
         BookingShort lastBooking = null;
         BookingShort nextBooking = null;
-        if (bookingRepository.getLastItemBooking(item.getId()) != null){
+        if (bookingRepository.getLastItemBooking(item.getId()) != null) {
             lastBooking = new BookingShort(bookingRepository.getLastItemBooking(item.getId()));
         }
-        if (bookingRepository.getNextItemBooking(item.getId()) != null){
+        if (bookingRepository.getNextItemBooking(item.getId()) != null) {
             nextBooking = new BookingShort(bookingRepository.getNextItemBooking(item.getId()));
         }
         List<CommentForResponse> comments = commentRepository.findAllByItem(item.getId()).stream()

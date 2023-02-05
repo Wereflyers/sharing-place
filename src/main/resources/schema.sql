@@ -45,7 +45,7 @@ create table if not exists BOOKINGS
             on update cascade on delete cascade
 );
 
-create table REQUESTS
+create table if not exists REQUESTS
 (
     ID           BIGINT auto_increment,
     DESCRIPTION  CHARACTER VARYING,
@@ -57,7 +57,7 @@ create table REQUESTS
             on update cascade on delete cascade
 );
 
-create table COMMENTS
+create table if not exists COMMENTS
 (
     ID        BIGINT auto_increment
         primary key,
