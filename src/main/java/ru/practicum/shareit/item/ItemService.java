@@ -15,7 +15,7 @@ public interface ItemService {
 
     ItemForResponse add(long userId, ItemDto itemDto);
 
-    ItemForResponse get(long id);
+    ItemForResponse get(long id, long userId);
 
     ItemForResponse update(long userId, long id, ItemDto itemDto);
 

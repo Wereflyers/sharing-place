@@ -43,15 +43,15 @@ public class ItemServiceImpl implements ItemService {
         if (userRepository.findById(userId).isEmpty())
             throw new NullPointerException("User " + userId + " is not found");
         return itemRepository.findAllByOwnerId(userId).stream()
-                .map(this::createResponse)
+                .map(i -> createResponse(i, userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemForResponse get(long id) {
+    public ItemForResponse get(long id, long userId) {
         if (itemRepository.findById(id).isEmpty())
             throw new NullPointerException("Item " + id + " is not found.");
-        return createResponse(itemRepository.findById(id).get());
+        return createResponse(itemRepository.findById(id).get(), userId);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
         validateItem(itemDto);
         if (userRepository.findById(userId).isEmpty())
             throw new NullPointerException("User " + userId + " is not found");
-        return createResponse(itemRepository.save(ItemMapper.toItem(itemDto, userId)));
+        return createResponse(itemRepository.save(ItemMapper.toItem(itemDto, userId)), userId);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findById(id).get().getOwnerId() != userId)
             throw new NullPointerException("You don't have proper rights.");
         itemDto.setId(id);
-        return createResponse(itemRepository.update(ItemMapper.toItem(itemDto, userId)));
+        return createResponse(itemRepository.update(ItemMapper.toItem(itemDto, userId)), userId);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
         if (req.isBlank())
             return new ArrayList<>();
         return itemRepository.search(req).stream()
-                .map(this::createResponse)
+                .map(i -> createResponse(i, i.getOwnerId()))
                 .collect(Collectors.toList());
     }
 
@@ -118,19 +118,21 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("Available is null");
     }
 
-    private ItemForResponse createResponse(Item item) {
-        BookingShort lastBooking = null;
-        BookingShort nextBooking = null;
-        if (bookingRepository.getLastItemBooking(item.getId()) != null) {
-            lastBooking = new BookingShort(bookingRepository.getLastItemBooking(item.getId()));
-        }
-        if (bookingRepository.getNextItemBooking(item.getId()) != null) {
-            nextBooking = new BookingShort(bookingRepository.getNextItemBooking(item.getId()));
-        }
+    private ItemForResponse createResponse(Item item, long userId) {
         List<CommentForResponse> comments = commentRepository.findAllByItem(item.getId()).stream()
                 .map(this::createCommentForResponse)
                 .collect(Collectors.toList());
-       return ItemMapper.toItemForResponse(item, lastBooking, nextBooking, comments);
+        BookingShort lastBooking = null;
+        BookingShort nextBooking = null;
+        if (userId == item.getOwnerId()) {
+            if (bookingRepository.getLastItemBooking(item.getId()) != null) {
+                lastBooking = new BookingShort(bookingRepository.getLastItemBooking(item.getId()));
+            }
+            if (bookingRepository.getNextItemBooking(item.getId()) != null) {
+                nextBooking = new BookingShort(bookingRepository.getNextItemBooking(item.getId()));
+            }
+        }
+        return ItemMapper.toItemForResponse(item, lastBooking, nextBooking, comments);
     }
 
     private CommentForResponse createCommentForResponse(Comment comment) {

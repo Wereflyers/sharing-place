@@ -76,6 +76,8 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
     public Booking getLastItemBooking(Long itemId) {
         List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
                 itemId).stream()
+                .filter(b -> !b.getStart().isEqual(LocalDateTime.now()))
+                .filter(b -> !b.getEnd().isEqual(LocalDateTime.now()))
                 .filter(b -> (b.getStart().isBefore(LocalDateTime.now())))
                 .filter(b -> (b.getStatus() == BookingStatus.APPROVED))
                 .filter(b -> (b.getEnd().isBefore(LocalDateTime.now())))
@@ -91,6 +93,8 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
     public Booking getNextItemBooking(Long itemId) {
         List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
                 itemId).stream()
+                .filter(b -> !b.getStart().isEqual(LocalDateTime.now()))
+                .filter(b -> !b.getEnd().isEqual(LocalDateTime.now()))
                 .filter(b -> (b.getStart().isAfter(LocalDateTime.now())))
                 .filter(b -> (b.getStatus() == BookingStatus.APPROVED))
                 .collect(Collectors.toList());
