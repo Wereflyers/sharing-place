@@ -23,6 +23,4 @@ public class Item {
     Boolean available;
     @Column(name = "owner_id")
     Long ownerId;
-    @Column(name = "rent_times")
-    Long rentTimes;
 }
