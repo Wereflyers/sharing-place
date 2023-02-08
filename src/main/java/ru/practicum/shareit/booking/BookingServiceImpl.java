@@ -93,27 +93,33 @@ public class BookingServiceImpl implements BookingService {
         if (bookingRepository.findAllByBookerIdOrderByStartDesc(userId) == null) {
             return new ArrayList<>();
         }
-        List<Booking> bookings = new ArrayList<>();
+        List<Booking> bookings = null;
         switch (state) {
             case ALL:
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
+                break;
             case PAST:
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId).stream()
                         .filter(b -> b.getEnd().isBefore(LocalDateTime.now()))
                         .collect(Collectors.toList());
+                break;
             case FUTURE:
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId).stream()
                         .filter(b -> b.getStart().isAfter(LocalDateTime.now()))
                         .collect(Collectors.toList());
+                break;
             case CURRENT:
                 bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId).stream()
                         .filter(b -> b.getEnd().isAfter(LocalDateTime.now()))
                         .filter(b -> b.getStart().isBefore(LocalDateTime.now()))
                         .collect(Collectors.toList());
+                break;
             case WAITING:
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStart(userId, BookingStatus.WAITING);
+                break;
             case REJECTED:
                 bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStart(userId, BookingStatus.REJECTED);
+                break;
         }
         return bookings.stream()
                 .map(this::createResponse)
@@ -128,27 +134,33 @@ public class BookingServiceImpl implements BookingService {
         if (bookingRepository.findAllByOwnerIdOrderByStartDesc(userId) == null) {
             return new ArrayList<>();
         }
-        List<Booking> bookings = new ArrayList<>();
+        List<Booking> bookings = null;
         switch (state) {
             case ALL:
                 bookings = bookingRepository.findAllByOwnerIdOrderByStartDesc(userId);
+                break;
             case PAST:
                 bookings = bookingRepository.findAllByOwnerIdOrderByStartDesc(userId).stream()
                         .filter(b -> b.getEnd().isBefore(LocalDateTime.now()))
                         .collect(Collectors.toList());
+                break;
             case FUTURE:
                 bookings = bookingRepository.findAllByOwnerIdOrderByStartDesc(userId).stream()
                         .filter(b -> b.getEnd().isAfter(LocalDateTime.now()))
                         .collect(Collectors.toList());
+                break;
             case CURRENT:
                 bookings = bookingRepository.findAllByOwnerIdOrderByStartDesc(userId).stream()
                         .filter(b -> b.getEnd().isAfter(LocalDateTime.now()))
                         .filter(b -> b.getStart().isBefore(LocalDateTime.now()))
                         .collect(Collectors.toList());
+                break;
             case WAITING:
                 bookings = bookingRepository.findAllByOwnerIdAndStatusOrderByStart(userId, BookingStatus.WAITING);
+                break;
             case REJECTED:
                 bookings = bookingRepository.findAllByOwnerIdAndStatusOrderByStart(userId, BookingStatus.REJECTED);
+                break;
         }
         return bookings.stream()
                 .map(this::createResponse)

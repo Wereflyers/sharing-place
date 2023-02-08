@@ -2,10 +2,12 @@ package ru.practicum.shareit.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User>, UserRepositoryCustom {
+@Repository
+public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
 
     /**
      * Поиск всех пользователей по емейлу.

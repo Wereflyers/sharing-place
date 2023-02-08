@@ -9,6 +9,7 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,11 +51,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto update(long id, UserDto userDto) {
+    public UserDto update(long id, UserDto user) {
         if (userRepository.findById(id).isEmpty())
             throw new NullPointerException("User " + id + " is not found.");
         try {
-            return UserMapper.toUserDto(userRepository.update(UserMapper.toUser(userDto, id)));
+            User newUser = userRepository.findById(id).get();
+            if (user.getEmail() != null) {
+                if (userRepository.findAllByEmail(user.getEmail()).size() > 0 &&
+                        !Objects.equals(userRepository.findAllByEmail(user.getEmail()).get(0).getId(), user.getId())) {
+                    throw new DuplicateException("Email already exist.");
+                }
+                newUser.setEmail(user.getEmail());
+            }
+            if (user.getName() != null)
+                newUser.setName(user.getName());
+            return UserMapper.toUserDto(userRepository.save(newUser));
         } catch (Exception e) {
         throw new DuplicateException(e.getMessage());
         }
