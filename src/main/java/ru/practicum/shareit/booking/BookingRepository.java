@@ -5,8 +5,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
-public interface BookingRepository extends JpaRepository<Booking, Long>, QuerydslPredicateExecutor<Booking>,
-        BookingRepositoryCustom {
+public interface BookingRepository extends JpaRepository<Booking, Long>, QuerydslPredicateExecutor<Booking> {
 
     /**
      * Показывает все бронирования пользователя, отсортированные по дате.

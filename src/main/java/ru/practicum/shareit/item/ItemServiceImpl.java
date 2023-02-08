@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -71,7 +72,14 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findById(id).get().getOwnerId() != userId)
             throw new NullPointerException("You don't have proper rights.");
         itemDto.setId(id);
-        return createResponse(itemRepository.update(ItemMapper.toItem(itemDto, userId)), userId);
+        Item newItem = itemRepository.findById(itemDto.getId()).get();
+        if (itemDto.getName() != null)
+            newItem.setName(itemDto.getName());
+        if (itemDto.getDescription() != null)
+            newItem.setDescription(itemDto.getDescription());
+        if (itemDto.getAvailable() != null)
+            newItem.setAvailable(itemDto.getAvailable());
+        return createResponse(itemRepository.save(newItem), userId);
     }
 
     @Override
@@ -125,11 +133,11 @@ public class ItemServiceImpl implements ItemService {
         BookingShort lastBooking = null;
         BookingShort nextBooking = null;
         if (userId == item.getOwnerId()) {
-            if (bookingRepository.getLastItemBooking(item.getId()) != null) {
-                lastBooking = new BookingShort(bookingRepository.getLastItemBooking(item.getId()));
+            if (getLastItemBooking(item.getId()) != null) {
+                lastBooking = new BookingShort(getLastItemBooking(item.getId()));
             }
-            if (bookingRepository.getNextItemBooking(item.getId()) != null) {
-                nextBooking = new BookingShort(bookingRepository.getNextItemBooking(item.getId()));
+            if (getNextItemBooking(item.getId()) != null) {
+                nextBooking = new BookingShort(getNextItemBooking(item.getId()));
             }
         }
         return ItemMapper.toItemForResponse(item, lastBooking, nextBooking, comments);
@@ -137,5 +145,36 @@ public class ItemServiceImpl implements ItemService {
 
     private CommentForResponse createCommentForResponse(Comment comment) {
         return CommentMapper.toCommentForResponse(comment, userRepository.findById(comment.getAuthor()).get().getName());
+    }
+
+    public Booking getNextItemBooking(Long itemId) {
+        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
+                        itemId).stream()
+                .filter(b -> !b.getStart().isEqual(LocalDateTime.now()))
+                .filter(b -> !b.getEnd().isEqual(LocalDateTime.now()))
+                .filter(b -> (b.getStart().isAfter(LocalDateTime.now())))
+                .filter(b -> (b.getStatus() == BookingStatus.APPROVED))
+                .collect(Collectors.toList());
+        if (bookings.size() == 0) {
+            return null;
+        } else {
+            return bookings.get(0);
+        }
+    }
+
+    public Booking getLastItemBooking(Long itemId) {
+        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
+                        itemId).stream()
+                .filter(b -> !b.getStart().isEqual(LocalDateTime.now()))
+                .filter(b -> !b.getEnd().isEqual(LocalDateTime.now()))
+                .filter(b -> (b.getStart().isBefore(LocalDateTime.now())))
+                .filter(b -> (b.getStatus() == BookingStatus.APPROVED))
+                .filter(b -> (b.getEnd().isBefore(LocalDateTime.now())))
+                .collect(Collectors.toList());
+        if (bookings.size() == 0) {
+            return null;
+        } else {
+            return bookings.get(0);
+        }
     }
 }

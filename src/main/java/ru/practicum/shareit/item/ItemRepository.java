@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item>, ItemRepositoryCustom {
+public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> {
 
     /**
      * Вывод списка всех вещей, которые принадлежат конкретному пользователю.
