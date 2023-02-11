@@ -29,7 +29,18 @@ public class ItemMapper {
                 .available(item.getAvailable())
                 .lastBooking(lastBooking)
                 .nextBooking(nextBooking)
+                .requestId(item.getRequestId())
                 .comments(comments)
+                .build();
+    }
+
+    public static ItemDto toItemDto(Item item) {
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .requestId(item.getRequestId())
+                .available(item.getAvailable())
                 .build();
     }
 }

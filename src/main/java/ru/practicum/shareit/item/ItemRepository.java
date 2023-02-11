@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.dto.RequestResponse;
 
 import java.util.List;
 
@@ -30,4 +31,5 @@ public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredi
             "or upper(i.description) like upper(concat('%', ?1, '%'))) " +
             "and i.available = true ")
     List<Item> search(String req);
+    List<Item> findAllByRequestId(long requestId);
 }

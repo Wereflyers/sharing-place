@@ -21,6 +21,7 @@ public class Item {
     String name;
     String description;
     Boolean available;
+    Long requestId;
     @Column(name = "owner_id")
     Long ownerId;
 }
