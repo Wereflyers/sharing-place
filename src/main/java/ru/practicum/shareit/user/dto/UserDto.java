@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Positive;
 
 @AllArgsConstructor
 @Getter
@@ -12,7 +11,6 @@ import javax.validation.constraints.Positive;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
-    @Positive
     Long id;
     String name;
     @Email

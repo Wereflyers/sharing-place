@@ -2,14 +2,21 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.booking.dto.BookingShort;
 
-@RequiredArgsConstructor
+import java.util.List;
+
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDto {
+public class ItemForResponse {
     Long id;
     String name;
     String description;
     Boolean available;
+    BookingShort lastBooking;
+    BookingShort nextBooking;
+    List<CommentForResponse> comments;
 }

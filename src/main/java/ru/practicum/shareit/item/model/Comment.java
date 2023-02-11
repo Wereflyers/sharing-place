@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.item.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,23 +14,16 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Entity
-@Table(name = "bookings")
-public class Booking {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @Column(name = "user_id")
-    Long bookerId;
+    String text;
     @Column(name = "item_id")
-    Long itemId;
-    @Column(name = "owner_id")
-    Long ownerId;
-    @Column(name = "start_time")
+    Long item;
+    @Column(name = "author_id")
+    Long author;
     @DateTimeFormat
-    LocalDateTime start;
-    @Column(name = "end_time")
-    @DateTimeFormat
-    LocalDateTime end;
-    @Enumerated
-    BookingStatus status;
+    LocalDateTime created;
 }

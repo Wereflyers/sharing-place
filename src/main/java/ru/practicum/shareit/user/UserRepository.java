@@ -1,47 +1,19 @@
 package ru.practicum.shareit.user;
 
-import ru.practicum.shareit.user.dto.UserDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserRepository {
+@Repository
+public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
 
     /**
-     * Вывод списка пользователей.
-     *
+     * Поиск всех пользователей по емейлу.
+     * @param email - емейл
      * @return List
      */
-    List<UserDto> getAll();
+    List<User> findAllByEmail(String email);
 
-    /**
-     * Добавление пользователя.
-     *
-     * @param userDto - описание профиля
-     * @return User
-     */
-    User add(UserDto userDto);
-
-    /**
-     * Получение информации о пользователе по идентификатору.
-     *
-     * @param id - идентификатор пользователя
-     * @return User
-     */
-    User get(long id);
-
-    /**
-     * Обновление информации о пользователе.
-     *
-     * @param userDto - описание профиля
-     * @return User
-     */
-    User update(UserDto userDto);
-
-    /**
-     * Удаление пользователя.
-     *
-     * @param id - идентификатор пользователя
-     * @return boolean
-     */
-    boolean delete(long id);
 }

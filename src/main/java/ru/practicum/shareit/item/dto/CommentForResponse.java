@@ -3,13 +3,16 @@ package ru.practicum.shareit.item.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@RequiredArgsConstructor
+import java.time.LocalDateTime;
+
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDto {
+public class CommentForResponse {
     Long id;
-    String name;
-    String description;
-    Boolean available;
+    String text;
+    String authorName;
+    LocalDateTime created;
 }
