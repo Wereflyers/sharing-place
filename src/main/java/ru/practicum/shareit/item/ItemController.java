@@ -23,8 +23,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemForResponse> getAll(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.getAllForUser(userId);
+    public List<ItemForResponse> getAll(@RequestHeader("X-Sharer-User-Id") long userId,
+                                        @RequestParam(defaultValue = "0") int from, @RequestParam(defaultValue = "100") int size) {
+        return itemService.getAllForUser(userId, from, size);
     }
 
     @GetMapping("/{id}")
@@ -49,8 +50,9 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemForResponse> search(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam("text") String req) {
-        return itemService.search(req);
+    public List<ItemForResponse> search(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam("text") String req,
+                                        @RequestParam(defaultValue = "0") int from, @RequestParam(defaultValue = "100") int size) {
+        return itemService.search(req, from, size);
     }
 
     @PostMapping("/{id}/comment")

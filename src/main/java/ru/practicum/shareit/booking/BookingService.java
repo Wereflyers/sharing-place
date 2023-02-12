@@ -13,8 +13,8 @@ public interface BookingService {
 
     BookingForResponse get(Long userId, Long id);
 
-    List<BookingForResponse> getAll(Long userId, State state);
+    List<BookingForResponse> getAll(Long userId, State state, int from, int size);
 
-    List<BookingForResponse> getAllForItems(Long userId, State state);
+    List<BookingForResponse> getAllForItems(Long userId, State state, int from, int size);
 
 }

@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface ItemService {
 
-    List<ItemForResponse> search(String req);
+    List<ItemForResponse> search(String req, int from, int size);
 
-    List<ItemForResponse> getAllForUser(long userId);
+    List<ItemForResponse> getAllForUser(long userId, int from, int size);
 
     ItemForResponse add(long userId, ItemDto itemDto);
 

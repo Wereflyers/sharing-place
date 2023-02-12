@@ -9,9 +9,9 @@ import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestForResponse;
-import ru.practicum.shareit.request.dto.RequestResponse;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 @Slf4j
@@ -51,8 +51,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (userRepository.findById(userId).isEmpty()) {
             throw new NullPointerException("User not found");
         }
-        if (itemRequestRepository.findAllByUserIdOrderByCreated(userId).isEmpty()) {
-            return null;
+        if (itemRequestRepository.findAllByUserIdOrderByCreated(userId).size() < 1) {
+            return new ArrayList<>();
         }
         return itemRequestRepository.findAllByUserIdOrderByCreated(userId).stream()
                 .map(this::createResponse)
@@ -78,7 +78,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
         if (responses.isEmpty()) {
-            return ItemRequestMapper.toResponse(itemRequest, false, null);
+            return ItemRequestMapper.toResponse(itemRequest, false, new ArrayList<>());
         } else {
             return ItemRequestMapper.toResponse(itemRequest, true, responses);
         }
