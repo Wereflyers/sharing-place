@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import javax.validation.constraints.Email;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder

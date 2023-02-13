@@ -9,6 +9,7 @@ import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
