@@ -69,35 +69,19 @@ class BookingControllerTest {
     @Test
     void getAll_whenRightState_thenReturnList() {
         BookingForResponse currentBooking = new BookingForResponse();
-        BookingForResponse pastBooking = new BookingForResponse();
-        BookingForResponse futureBooking = new BookingForResponse();
-        BookingForResponse waitingBooking = new BookingForResponse();
-        BookingForResponse rejectedBooking = new BookingForResponse();
-        List<BookingForResponse> allBookings = List.of(currentBooking, pastBooking, futureBooking, waitingBooking, rejectedBooking);
 
-        when(bookingService.getAll(userId, State.ALL, 0, 1)).thenReturn(allBookings);
         when(bookingService.getAll(userId, State.CURRENT, 0, 1)).thenReturn(List.of(currentBooking));
-        when(bookingService.getAll(userId, State.PAST, 0, 1)).thenReturn(List.of(pastBooking));
-        when(bookingService.getAll(userId, State.FUTURE, 0, 1)).thenReturn(List.of(futureBooking));
-        when(bookingService.getAll(userId, State.WAITING, 0, 1)).thenReturn(List.of(waitingBooking));
-        when(bookingService.getAll(userId, State.REJECTED, 0, 1)).thenReturn(List.of(rejectedBooking));
 
-        List<BookingForResponse> all = bookingController.getAll(userId, "ALL", 0, 1);
         List<BookingForResponse> current = bookingController.getAll(userId, "CURRENT", 0, 1);
-        List<BookingForResponse> past = bookingController.getAll(userId, "PAST", 0, 1);
-        List<BookingForResponse> future = bookingController.getAll(userId, "FUTURE", 0, 1);
-        List<BookingForResponse> waiting = bookingController.getAll(userId, "WAITING", 0, 1);
-        List<BookingForResponse> rejected = bookingController.getAll(userId, "REJECTED", 0, 1);
 
-        assertEquals(all, allBookings);
         assertEquals(current, List.of(currentBooking));
-        assertEquals(past, List.of(pastBooking));
-        assertEquals(future, List.of(futureBooking));
-        assertEquals(waiting, List.of(waitingBooking));
-        assertEquals(rejected, List.of(rejectedBooking));
-        verify(bookingService, times(6)).getAll(anyLong(), any(), anyInt(), anyInt());
+        verify(bookingService, times(1)).getAll(anyLong(), any(), anyInt(), anyInt());
+    }
 
-        //TODO separately is better
+    @Test
+    void getAll_whenWrongState_thenThrowException() {
+        verify(bookingService, never()).getAll(anyLong(), any(), anyInt(), anyInt());
+        assertThrows(IllegalArgumentException.class, () -> bookingController.getAll(userId, "IOI", 1, 1), "Unknown state: UNSUPPORTED_STATUS");
     }
 
     @Test
@@ -110,5 +94,11 @@ class BookingControllerTest {
 
         assertEquals(bookingsForResponse, response);
         verify(bookingService).getAllForItems(userId, State.ALL, 0, 1);
+    }
+
+    @Test
+    void getAllForItems_whenWrongState_thenThrowException() {
+        verify(bookingService, never()).getAllForItems(anyLong(), any(), anyInt(), anyInt());
+        assertThrows(IllegalArgumentException.class, () -> bookingController.getAllForItems(userId, "IOI", 1, 1));
     }
 }

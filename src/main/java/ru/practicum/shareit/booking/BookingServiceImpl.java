@@ -58,10 +58,10 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingForResponse approveOrReject(Long userId, Long id, Boolean approved) {
         validateBooking(id, userId);
-        if (!Objects.equals(bookingRepository.findById(id).get().getOwnerId(), userId)) {
+        Booking booking = bookingRepository.findById(id).get();
+        if (!Objects.equals(booking.getOwnerId(), userId)) {
             throw new NullPointerException("You don't have rights for this.");
         }
-        Booking booking = bookingRepository.findById(id).get();
         if (booking.getStatus() == BookingStatus.APPROVED) {
             throw new IllegalArgumentException("Already approved");
         }
@@ -69,6 +69,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus(BookingStatus.APPROVED);
         } else
             booking.setStatus(BookingStatus.REJECTED);
+        bookingRepository.save(booking);
         return createResponse(booking);
     }
 
@@ -140,7 +141,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case FUTURE:
                 bookings = bookingRepository.findAllByOwnerIdOrderByStartDesc(userId, page).stream()
-                        .filter(b -> b.getEnd().isAfter(LocalDateTime.now()))
+                        .filter(b -> b.getStart().isAfter(LocalDateTime.now()))
                         .collect(Collectors.toList());
                 break;
             case CURRENT:
