@@ -9,15 +9,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentForResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemForResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.user.UserServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,8 +91,9 @@ class ItemServiceImplTest {
 
     @Test
     void get_whenOK_thenReturnItem() {
-        when(itemRepository.findAllByOwnerId(anyLong(), any())).thenReturn(List.of(item));
         when(bookingRepository.findAllByItemIdOrderByStart(itemId)).thenReturn(new ArrayList<>());
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+        when(commentRepository.findAllByItem(itemId)).thenReturn(new ArrayList<>());
 
         ItemForResponse result = itemService.get(itemId, userId);
 
@@ -121,7 +125,7 @@ class ItemServiceImplTest {
     void add_whenNotValidItem_returnException() {
         itemDto.setAvailable(null);
 
-        assertThrows(NullPointerException.class, () -> itemService.add(userId, itemDto));
+        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
     }
 
     @Test
@@ -136,7 +140,7 @@ class ItemServiceImplTest {
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(bookingRepository.findAllByItemIdOrderByStart(itemId)).thenReturn(new ArrayList<>());
         when(commentRepository.findAllByItem(itemId)).thenReturn(new ArrayList<>());
-        when(itemRepository.save(any())).thenReturn(ItemMapper.toItem(itemDto, itemId));
+        when(itemRepository.save(any())).thenReturn(item);
 
         ItemForResponse actualItem = itemService.update(userId, itemId, itemDto);
 
@@ -202,14 +206,37 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addComment() {
+    void addComment_whenOK_thenReturnComment() {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setText("text");
+        Booking booking = new Booking();
+        booking.setBookerId(userId);
+        booking.setItemId(itemId);
+        booking.setId(1L);
+        booking.setStart(LocalDateTime.of(2021,1,1,1,1));
+        booking.setEnd(LocalDateTime.of(2022,1,1,1,1));
+
+        when(bookingRepository.findByItemIdAndBookerId(itemId, userId)).thenReturn(List.of(booking));
+        when(commentRepository.save(any())).thenReturn(CommentMapper.toComment(commentDto, userId, itemId));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
+
+        CommentForResponse result = itemService.addComment(userId, itemId, commentDto);
+
+        assertEquals(result.getText(), commentDto.getText());
     }
 
     @Test
-    void getNextItemBooking() {
+    void addComment_whenEmpty_thenReturnException() {
+        assertThrows(ValidationException.class, () -> itemService.addComment(userId, itemId, new CommentDto()));
     }
 
     @Test
-    void getLastItemBooking() {
+    void addComment_whenNoRights_thanThrowException() {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setText("text");
+
+        when(bookingRepository.findByItemIdAndBookerId(itemId, userId)).thenReturn(new ArrayList<>());
+
+        assertThrows(ValidationException.class, () -> itemService.addComment(userId, itemId, commentDto));
     }
 }

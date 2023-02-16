@@ -51,9 +51,9 @@ class UserControllerIT {
     void add() {
         UserDto userToCreate = new UserDto();
         userToCreate.setName("boris");
-        userToCreate.setEmail("bo@mail.ru");
+        userToCreate.setEmail("user@user.com");
 
-        when(userService.add(userToCreate)). thenReturn(userToCreate);
+        when(userService.add(any())). thenReturn(userToCreate);
 
         String result = mockMvc.perform(post("/users")
                         .contentType("application/json")
@@ -64,6 +64,43 @@ class UserControllerIT {
                 .getContentAsString();
 
         assertEquals(objectMapper.writeValueAsString(userToCreate), result);
+    }
+
+    @SneakyThrows
+    @Test
+    void add_whenUserNotValid_thenReturnBadRequest() {
+        long userId = 1L;
+        UserDto userToUpdate = new UserDto();
+        userToUpdate.setEmail("sara");
+
+        mockMvc.perform(post("/users")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(userToUpdate)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService, never()).update(userId, userToUpdate);
+    }
+
+    @SneakyThrows
+    @Test
+    void update() {
+        long userId = 1L;
+        UserDto userToCreate = new UserDto();
+        userToCreate.setName("boris");
+        userToCreate.setEmail("user@user.com");
+
+        when(userService.update(anyLong(), any())). thenReturn(userToCreate);
+
+        String result = mockMvc.perform(patch("/users/{userId}", userId)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(userToCreate)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        assertEquals(objectMapper.writeValueAsString(userToCreate), result);
+        verify(userService).update(anyLong(), any());
     }
 
     @SneakyThrows

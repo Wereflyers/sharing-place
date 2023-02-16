@@ -15,7 +15,6 @@ public class ItemRequestMapper {
                 .description(itemRequest.getDescription())
                 .userId(itemRequest.getUserId())
                 .created(itemRequest.getCreated())
-                .added(itemRequest.getAdded())
                 .build();
     }
 
@@ -25,7 +24,6 @@ public class ItemRequestMapper {
                 .description(itemRequestDto.getDescription())
                 .userId(userId)
                 .created(LocalDateTime.now())
-                .added(false)
                 .build();
     }
 

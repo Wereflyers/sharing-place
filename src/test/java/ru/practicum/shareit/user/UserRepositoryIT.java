@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +34,5 @@ class UserRepositoryIT {
         assertEquals(users.size(), 1);
         assertEquals(users.get(0).getEmail(), "john@mail.ru");
         assertEquals(users.get(0).getName(), "john");
-    }
-
-    @AfterEach
-    public void deleteAll() {
-        userRepository.deleteAll();
     }
 }

@@ -24,5 +24,4 @@ public class ItemRequest {
     String description;
     @DateTimeFormat
     LocalDateTime created;
-    Boolean added;
 }
