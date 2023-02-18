@@ -169,7 +169,7 @@ public class BookingServiceImpl implements BookingService {
         if (userRepository.findById(userId).isEmpty()) {
             throw new NullPointerException("User " + userId + " is not found");
         }
-        return PageRequest.of(from/size, size);
+        return PageRequest.of(from / size, size);
     }
 
     private void validateBooking(Long id, Long userId) {

@@ -14,6 +14,7 @@ import ru.practicum.shareit.user.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class ItemRequestServiceImpl implements ItemRequestService {
@@ -67,7 +68,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (from < 0 || size <= 0) {
             throw new ValidationException("Wrong parameters");
         }
-        return itemRequestRepository.findAll(PageRequest.of(from/size, size)).stream()
+        return itemRequestRepository.findAll(PageRequest.of(from / size, size)).stream()
                 .filter(r -> r.getUserId() != userId)
                 .map(this::createResponse)
                 .collect(Collectors.toList());

@@ -142,7 +142,7 @@ class ItemServiceImplTest {
         when(commentRepository.findAllByItem(itemId)).thenReturn(new ArrayList<>());
         when(itemRepository.save(any())).thenReturn(item);
 
-        ItemForResponse actualItem = itemService.update(userId, itemId, itemDto);
+        itemService.update(userId, itemId, itemDto);
 
         verify(itemRepository).save(itemArgumentCaptor.capture());
         Item savedItem = itemArgumentCaptor.getValue();
@@ -194,9 +194,9 @@ class ItemServiceImplTest {
     void search_whenOK_thenReturnItem() {
         when(itemRepository.search(anyString(), any())).thenReturn(new ArrayList<>());
 
-        List<ItemForResponse> result = itemService.search("r", 1, 10);
+        itemService.search("r", 1, 10);
 
-        verify(itemRepository).search("r", PageRequest.of(1/10, 10));
+        verify(itemRepository).search("r", PageRequest.of(1 / 10, 10));
     }
 
     @Test
