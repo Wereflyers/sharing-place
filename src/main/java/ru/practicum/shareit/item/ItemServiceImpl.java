@@ -141,10 +141,12 @@ public class ItemServiceImpl implements ItemService {
         BookingShort nextBooking = null;
         if (userId == item.getOwnerId()) {
             if (getLastItemBooking(item.getId()) != null) {
-                lastBooking = new BookingShort(getLastItemBooking(item.getId()));
+                Booking last = getLastItemBooking(item.getId());
+                lastBooking = new BookingShort(last.getId(), last.getBookerId());
             }
             if (getNextItemBooking(item.getId()) != null) {
-                nextBooking = new BookingShort(getNextItemBooking(item.getId()));
+                Booking next = getNextItemBooking(item.getId());
+                nextBooking = new BookingShort(next.getId(), next.getBookerId());
             }
         }
         return ItemMapper.toItemForResponse(item, lastBooking, nextBooking, comments);
