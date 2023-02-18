@@ -37,11 +37,12 @@ class CommentRepositoryIntegrationTest {
                 .available(true)
                 .ownerId(user1.getId())
                 .build());
-        Comment commentForCreate = new Comment();
-        commentForCreate.setText("text");
-        commentForCreate.setAuthor(user1.getId());
-        commentForCreate.setCreated(LocalDateTime.now());
-        comment = commentRepository.save(comment);
+        comment = commentRepository.save(Comment.builder()
+                .text("text")
+                .author(user1.getId())
+                .created(LocalDateTime.now())
+                .item(item1.getId())
+                .build());
     }
 
     @Test
