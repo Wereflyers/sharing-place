@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
@@ -24,8 +23,6 @@ class CommentRepositoryIT {
     private ItemRepository itemRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ItemRequestRepository itemRequestRepository;
     private Item item1;
     private Comment comment;
 
