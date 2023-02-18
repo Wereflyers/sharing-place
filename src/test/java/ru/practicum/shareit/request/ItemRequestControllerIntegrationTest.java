@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ItemRequestController.class)
 @AutoConfigureMockMvc
-class ItemRequestControllerIT {
+class ItemRequestControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired

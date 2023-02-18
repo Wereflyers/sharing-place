@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-class ItemRepositoryIT {
+class ItemRepositoryIntegrationTest {
     @Autowired
     private ItemRepository itemRepository;
     @Autowired

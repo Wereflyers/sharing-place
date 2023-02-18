@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class CommentRepositoryIT {
+class CommentRepositoryIntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
     @Autowired

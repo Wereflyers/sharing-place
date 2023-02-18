@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BookingController.class)
 @AutoConfigureMockMvc
-class BookingControllerIT {
+class BookingControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
