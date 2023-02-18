@@ -18,24 +18,25 @@ class ItemRequestRepositoryIT {
     private UserRepository userRepository;
     @Autowired
     private ItemRequestRepository itemRequestRepository;
+    private User user1;
 
     @BeforeEach
     void setUp() {
-        userRepository.save(User.builder()
+        user1 = userRepository.save(User.builder()
                 .email("john@mail.ru")
                 .name("john")
                 .build());
-        userRepository.save(User.builder()
+        User user2 = userRepository.save(User.builder()
                 .name("jane")
                 .email("jane@mail.ru")
                 .build());
         itemRequestRepository.save(ItemRequest.builder()
-                .userId(1L)
+                .userId(user1.getId())
                 .created(LocalDateTime.MIN)
                 .description("test")
                 .build());
         itemRequestRepository.save(ItemRequest.builder()
-                .userId(2L)
+                .userId(user2.getId())
                 .created(LocalDateTime.now())
                 .description("newTest")
                 .build());
@@ -43,7 +44,7 @@ class ItemRequestRepositoryIT {
 
     @Test
     void findAllByUserIdOrderByCreated() {
-        List<ItemRequest> requestList = itemRequestRepository.findAllByUserIdOrderByCreated(1L);
+        List<ItemRequest> requestList = itemRequestRepository.findAllByUserIdOrderByCreated(user1.getId());
 
         assertEquals(requestList.size(), 1);
         assertEquals(requestList.get(0).getUserId(), 1L);

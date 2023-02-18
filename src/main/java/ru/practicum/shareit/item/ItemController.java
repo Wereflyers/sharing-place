@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.dto.CommentForResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemForResponse;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Validated
@@ -34,13 +33,13 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemForResponse add(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto itemDto) {
+    public ItemForResponse add(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody ItemDto itemDto) {
         return itemService.add(userId, itemDto);
     }
 
     @PatchMapping("/{id}")
     public ItemForResponse update(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long id,
-                                  @Valid @RequestBody ItemDto itemDto) {
+                                  @RequestBody ItemDto itemDto) {
         return itemService.update(userId, id, itemDto);
     }
 
