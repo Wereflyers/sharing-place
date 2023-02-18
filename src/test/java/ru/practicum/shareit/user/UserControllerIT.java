@@ -38,7 +38,7 @@ class UserControllerIT {
 
     @SneakyThrows
     @Test
-    void getUserById() {
+    void get_UserById() {
         long userId = 1L;
         mockMvc.perform(get("/users/{userId}", userId))
                 .andExpect(status().isOk());

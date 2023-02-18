@@ -222,7 +222,7 @@ class ItemServiceImplTest {
 
         CommentForResponse result = itemService.addComment(userId, itemId, commentDto);
 
-        assertEquals(result.getText(), commentDto.getText());
+        assertEquals(result.getText(), CommentMapper.toComment(commentDto, userId, itemId).getText());
     }
 
     @Test

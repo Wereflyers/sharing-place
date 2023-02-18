@@ -37,12 +37,11 @@ class CommentRepositoryIT {
                 .available(true)
                 .ownerId(user1.getId())
                 .build());
-        comment = commentRepository.save(Comment.builder()
-                .author(user1.getId())
-                .text("text")
-                .created(LocalDateTime.now())
-                .item(item1.getId())
-                .build());
+        Comment commentForCreate = new Comment();
+        commentForCreate.setText("text");
+        commentForCreate.setAuthor(user1.getId());
+        commentForCreate.setCreated(LocalDateTime.now());
+        comment = commentRepository.save(comment);
     }
 
     @Test
@@ -50,6 +49,9 @@ class CommentRepositoryIT {
         List<Comment> commentList = commentRepository.findAllByItem(item1.getId());
 
         assertEquals(commentList.size(), 1);
-        assertEquals(commentList.get(0), comment);
+        assertEquals(commentList.get(0).getAuthor(), comment.getAuthor());
+        assertEquals(commentList.get(0).getText(), comment.getText());
+        assertEquals(commentList.get(0).getItem(), comment.getItem());
+        assertEquals(commentList.get(0).getCreated(), comment.getCreated());
     }
 }

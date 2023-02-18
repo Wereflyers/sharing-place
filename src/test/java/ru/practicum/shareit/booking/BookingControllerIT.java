@@ -83,7 +83,7 @@ class BookingControllerIT {
 
     @SneakyThrows
     @Test
-    void getBooking() {
+    void get_Booking() {
         when(bookingService.get(userId, 1L)).thenReturn(response);
 
         String result = mockMvc.perform(get("/bookings/{id}", 1L)

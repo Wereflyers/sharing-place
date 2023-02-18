@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.booking.dto.BookingShort;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentForResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -44,6 +45,8 @@ class ItemControllerIT {
                 .name("item")
                 .id(itemId)
                 .description("new")
+                .lastBooking(new BookingShort(1L, 1L))
+                .nextBooking(new BookingShort(2L, 2L))
                 .build();
         itemDto = ItemDto.builder()
                 .name("itemName")
@@ -66,7 +69,7 @@ class ItemControllerIT {
 
     @SneakyThrows
     @Test
-    void getItem() {
+    void get_Item() {
         when(itemService.get(itemId, userId)).thenReturn(item);
 
         String result = mockMvc.perform(get("/items/{itemId}", itemId)

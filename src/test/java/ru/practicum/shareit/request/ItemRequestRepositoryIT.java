@@ -47,7 +47,7 @@ class ItemRequestRepositoryIT {
         List<ItemRequest> requestList = itemRequestRepository.findAllByUserIdOrderByCreated(user1.getId());
 
         assertEquals(requestList.size(), 1);
-        assertEquals(requestList.get(0).getUserId(), 1L);
+        assertEquals(requestList.get(0).getUserId(), user1.getId());
         assertEquals(requestList.get(0).getCreated(), LocalDateTime.MIN);
     }
 }

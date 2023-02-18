@@ -91,7 +91,7 @@ class ItemRequestControllerIT {
 
     @SneakyThrows
     @Test
-    void getItemRequest() {
+    void get_ItemRequest() {
         when(itemRequestService.get(userId, 1L)).thenReturn(response);
 
         String result = mockMvc.perform(get("/requests/{requestId}", 1L)
