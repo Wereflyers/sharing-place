@@ -42,12 +42,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemForResponse> getAllForUser(long userId, int from, int size) {
-        if (from < 0 || size <= 0) {
+        if (from < 0 || size <= 0)
             throw new ValidationException("Wrong parameters");
-        }
         if (userRepository.findById(userId).isEmpty())
             throw new NullPointerException("User " + userId + " is not found");
-        return itemRepository.findAllByOwnerId(userId, PageRequest.of(from/size, size)).stream()
+        return itemRepository.findAllByOwnerId(userId, PageRequest.of(from / size, size)).stream()
                 .map(i -> createResponse(i, userId))
                 .collect(Collectors.toList());
     }
@@ -104,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
         if (req.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.search(req, PageRequest.of(from/size, size)).stream()
+        return itemRepository.search(req, PageRequest.of(from / size, size)).stream()
                 .map(i -> createResponse(i, i.getOwnerId()))
                 .collect(Collectors.toList());
     }
