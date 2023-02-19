@@ -246,6 +246,7 @@ class BookingServiceImplTest {
         assertEquals(result.size(), 1);
         assertEquals(booking.getId(), result.get(0).getId());
     }
+
     @Test
     void getAll_whenOK_returnAll() {
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
