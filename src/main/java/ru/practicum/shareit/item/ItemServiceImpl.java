@@ -157,8 +157,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public Booking getNextItemBooking(Long itemId) {
-        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
-                        itemId).stream()
+        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(itemId).stream()
                 .filter(b -> !b.getStart().isEqual(LocalDateTime.now()))
                 .filter(b -> !b.getEnd().isEqual(LocalDateTime.now()))
                 .filter(b -> (b.getStart().isAfter(LocalDateTime.now())))
@@ -172,8 +171,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public Booking getLastItemBooking(Long itemId) {
-        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(
-                        itemId).stream()
+        List<Booking> bookings = bookingRepository.findAllByItemIdOrderByStart(itemId).stream()
                 .filter(b -> !b.getStart().isEqual(LocalDateTime.now()))
                 .filter(b -> !b.getEnd().isEqual(LocalDateTime.now()))
                 .filter(b -> (b.getStart().isBefore(LocalDateTime.now())))

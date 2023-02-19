@@ -140,8 +140,8 @@ class UserServiceImplTest {
     @Test
     void update_whenDuplicateEmail_thenThrowException() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user1));
-        when(userRepository.findAllByEmail(anyString())).thenReturn(List.of(user2.builder()
-                .id(2L)
+        when(userRepository.findAllByEmail(anyString())).thenReturn(List.of(User.builder()
+                .id(1L)
                 .build()));
 
         assertThrows(DuplicateException.class, () -> userService.update(userId, UserMapper.toUserDto(user2)));

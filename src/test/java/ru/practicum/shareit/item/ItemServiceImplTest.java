@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentForResponse;
@@ -27,8 +28,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ItemServiceImplTest {
@@ -91,7 +91,22 @@ class ItemServiceImplTest {
 
     @Test
     void get_whenOK_thenReturnItem() {
-        when(bookingRepository.findAllByItemIdOrderByStart(itemId)).thenReturn(new ArrayList<>());
+        Booking lastBooking = Booking.builder()
+                .start(LocalDateTime.of(2022, 1, 1, 1, 1))
+                .end(LocalDateTime.of(2022, 3, 3, 3, 3))
+                .status(BookingStatus.APPROVED)
+                .itemId(itemId)
+                .bookerId(1L)
+                .build();
+        Booking nextBooking = Booking.builder()
+                .start(LocalDateTime.of(2024, 1, 1, 1, 1))
+                .end(LocalDateTime.of(2024, 3, 3, 3, 3))
+                .status(BookingStatus.APPROVED)
+                .itemId(itemId)
+                .bookerId(2L)
+                .build();
+
+        when(bookingRepository.findAllByItemIdOrderByStart(itemId)).thenReturn(List.of(nextBooking, lastBooking));
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(commentRepository.findAllByItem(itemId)).thenReturn(new ArrayList<>());
 
@@ -99,6 +114,8 @@ class ItemServiceImplTest {
 
         assertEquals(result.getId(), itemId);
         assertEquals(result.getName(), item.getName());
+        assertEquals(result.getLastBooking().getBookerId(), 1L);
+        assertEquals(result.getNextBooking().getBookerId(), 2L);
     }
 
     @Test
@@ -122,8 +139,30 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void add_whenNotValidItem_returnException() {
+    void add_whenNotValidAvailable_returnException() {
         itemDto.setAvailable(null);
+
+        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
+    }
+
+    @Test
+    void add_whenNotValidName_returnException() {
+        itemDto.setName(null);
+
+        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
+
+        itemDto.setName(" ");
+
+        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
+    }
+
+    @Test
+    void add_whenNotValidDescription_returnException() {
+        itemDto.setDescription(null);
+
+        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
+
+        itemDto.setDescription(" ");
 
         assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
     }
@@ -200,6 +239,14 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void search_whenEmpty_thenReturnEmptyList() {
+        List<ItemForResponse> result = itemService.search(" ", 1, 10);
+
+        verify(itemRepository, never()).search(anyString(), any());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void search_whenWrongParameters_thenThrowException() {
         assertThrows(ValidationException.class, () -> itemService.search("req", -1, 9));
         assertThrows(ValidationException.class, () -> itemService.search("req", 0, -9));
@@ -228,6 +275,10 @@ class ItemServiceImplTest {
     @Test
     void addComment_whenEmpty_thenReturnException() {
         assertThrows(ValidationException.class, () -> itemService.addComment(userId, itemId, new CommentDto()));
+
+        CommentDto emptyComment = new CommentDto();
+        emptyComment.setText(" ");
+        assertThrows(ValidationException.class, () -> itemService.addComment(userId, itemId, emptyComment));
     }
 
     @Test

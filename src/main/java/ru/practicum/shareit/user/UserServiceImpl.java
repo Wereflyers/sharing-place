@@ -57,8 +57,7 @@ public class UserServiceImpl implements UserService {
         try {
             User newUser = userRepository.findById(id).get();
             if (user.getEmail() != null) {
-                if (userRepository.findAllByEmail(user.getEmail()).size() > 0 &&
-                        !Objects.equals(userRepository.findAllByEmail(user.getEmail()).get(0).getId(), user.getId())) {
+                if (userRepository.findAllByEmail(user.getEmail()).size() > 0) {
                     throw new DuplicateException("Email already exist.");
                 }
                 newUser.setEmail(user.getEmail());

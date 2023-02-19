@@ -96,7 +96,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void getRequests_whenOK_thanReturnRequests() {
+    void getRequests_whenEmpty_thanReturnEmptyList() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
         when(itemRequestRepository.findAllByUserIdOrderByCreated(1L)).thenReturn(new ArrayList<>());
 
@@ -106,7 +106,18 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void getRequests_whenUserNorFound_thenThrowException() {
+    void getRequests_whenOK_thanReturnList() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(itemRequestRepository.findAllByUserIdOrderByCreated(1L)).thenReturn(List.of(itemRequest));
+        when(itemRepository.findAllByRequestId(anyLong())).thenReturn(new ArrayList<>());
+
+        List<ItemRequestForResponse> result = itemRequestService.getRequests(1L);
+
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    void getRequests_whenUserNotFound_thenThrowException() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NullPointerException.class, () -> itemRequestService.getRequests(1L));
@@ -121,5 +132,18 @@ class ItemRequestServiceImplTest {
 
         assertTrue(result.isEmpty());
         verify(itemRequestRepository).findAll(PageRequest.of(1, 1));
+    }
+
+    @Test
+    void getAll_whenUserNotFound_thenThrowException() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(NullPointerException.class, () -> itemRequestService.getAll(1L, 0, 10));
+    }
+
+    @Test
+    void getAll_whenWrongParameters_thenThrowException() {
+        assertThrows(NullPointerException.class, () -> itemRequestService.getAll(1L, -1, 10));
+        assertThrows(NullPointerException.class, () -> itemRequestService.getAll(1L, 1, 0));
     }
 }

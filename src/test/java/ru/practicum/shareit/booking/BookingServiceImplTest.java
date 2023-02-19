@@ -15,6 +15,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,7 +121,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void approveOrReject_whenOK_thenReturnBooking() {
+    void approveOrReject_whenApprove_thenReturnBooking() {
         when(bookingRepository.findById(any())).thenReturn(Optional.of(BookingMapper.toBookingWithoutId(bookingDto, 2L, 1L)));
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
@@ -135,8 +136,40 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void approveOrReject_whenReject_thenReturnBooking() {
+        when(bookingRepository.findById(any())).thenReturn(Optional.of(BookingMapper.toBookingWithoutId(bookingDto, 2L, 1L)));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.save(any())).thenReturn(BookingMapper.toBookingWithoutId(bookingDto, 2L, 1L));
+
+        BookingForResponse actualBooking = bookingService.approveOrReject(userId, 1L, false);
+
+        assertEquals(actualBooking.getStatus(), BookingStatus.REJECTED);
+        assertEquals(bookingDto.getStart(), actualBooking.getStart());
+        assertEquals(bookingDto.getEnd(), actualBooking.getEnd());
+        verify(bookingRepository, times(1)).save(any());
+    }
+
+    @Test
     void approveOrReject_whenNotOwner_thenThrowException() {
         when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(BookingMapper.toBookingWithoutId(bookingDto, 1L, 2L)));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+
+        assertThrows(NullPointerException.class, () -> bookingService.approveOrReject(userId, 1L, true));
+        verify(bookingRepository, never()).save(any());
+    }
+
+    @Test
+    void approveOrReject_whenUserNotFound_thenThrowException() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(NullPointerException.class, () -> bookingService.approveOrReject(userId, 1L, true));
+        verify(bookingRepository, never()).save(any());
+    }
+
+    @Test
+    void approveOrReject_whenNotFound_thenThrowException() {
+        when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
 
         assertThrows(NullPointerException.class, () -> bookingService.approveOrReject(userId, 1L, true));
@@ -213,9 +246,22 @@ class BookingServiceImplTest {
         assertEquals(result.size(), 1);
         assertEquals(booking.getId(), result.get(0).getId());
     }
+    @Test
+    void getAll_whenOK_returnAll() {
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyLong(), any()))
+                .thenReturn(List.of(booking));
+
+        List<BookingForResponse> result = bookingService.getAll(userId, State.ALL, 0, 20);
+
+        assertFalse(result.isEmpty());
+        assertEquals(result.size(), 1);
+        assertEquals(booking.getId(), result.get(0).getId());
+    }
 
     @Test
-    void getAllWithStatus_whenOK_returnAll() {
+    void getAllWithStatusWaiting_whenOK_returnAll() {
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
         when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyLong(), any()))
@@ -230,6 +276,55 @@ class BookingServiceImplTest {
         assertEquals(booking.getId(), result.get(0).getId());
     }
 
+    @Test
+    void getAllWithStatusRejected_whenOK_returnAll() {
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyLong(), any()))
+                .thenReturn(List.of(booking));
+        when(bookingRepository.findAllByBookerIdAndStatusOrderByStart(anyLong(), any(BookingStatus.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+
+        List<BookingForResponse> result = bookingService.getAll(userId, State.REJECTED, 0, 20);
+
+        assertFalse(result.isEmpty());
+        assertEquals(result.size(), 1);
+        assertEquals(booking.getId(), result.get(0).getId());
+    }
+
+    @Test
+    void getAll_whenEmpty_returnEmptyList() {
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyLong(), any())).thenReturn(new ArrayList<>());
+
+        List<BookingForResponse> result = bookingService.getAll(userId, State.REJECTED, 0, 20);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getAllForItems_whenEmpty_returnEmptyList() {
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any())).thenReturn(new ArrayList<>());
+
+        List<BookingForResponse> result = bookingService.getAll(userId, State.REJECTED, 0, 20);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getAllForItems_whenOK_returnAll() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any()))
+                .thenReturn(List.of(booking));
+
+        List<BookingForResponse> result = bookingService.getAllForItems(userId, State.ALL, 0, 20);
+
+        assertFalse(result.isEmpty());
+        assertEquals(result.size(), 1);
+    }
 
     @Test
     void getAllForItemsPast_whenOK_returnAll() {
@@ -271,7 +366,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllForItemsWithStatus_whenOK_returnAll() {
+    void getAllForItemsWithStatusWaiting_whenOK_returnAll() {
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
         when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any()))
@@ -280,6 +375,22 @@ class BookingServiceImplTest {
                 .thenReturn(List.of(booking));
 
         List<BookingForResponse> result = bookingService.getAllForItems(userId, State.WAITING, 0, 20);
+
+        assertFalse(result.isEmpty());
+        assertEquals(result.size(), 1);
+        assertEquals(booking.getId(), result.get(0).getId());
+    }
+
+    @Test
+    void getAllForItemsWithStatusRejected_whenOK_returnAll() {
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any()))
+                .thenReturn(List.of(booking));
+        when(bookingRepository.findAllByOwnerIdAndStatusOrderByStart(anyLong(), any(BookingStatus.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+
+        List<BookingForResponse> result = bookingService.getAllForItems(userId, State.REJECTED, 0, 20);
 
         assertFalse(result.isEmpty());
         assertEquals(result.size(), 1);
