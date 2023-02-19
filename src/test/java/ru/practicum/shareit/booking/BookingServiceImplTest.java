@@ -15,7 +15,6 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -161,7 +160,7 @@ class BookingServiceImplTest {
 
     @Test
     void approveOrReject_whenUserNotFound_thenThrowException() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
 
         assertThrows(NullPointerException.class, () -> bookingService.approveOrReject(userId, 1L, true));
         verify(bookingRepository, never()).save(any());
@@ -169,9 +168,6 @@ class BookingServiceImplTest {
 
     @Test
     void approveOrReject_whenNotFound_thenThrowException() {
-        when(bookingRepository.findById(anyLong())).thenReturn(Optional.empty());
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
-
         assertThrows(NullPointerException.class, () -> bookingService.approveOrReject(userId, 1L, true));
         verify(bookingRepository, never()).save(any());
     }
@@ -295,9 +291,7 @@ class BookingServiceImplTest {
 
     @Test
     void getAll_whenEmpty_returnEmptyList() {
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyLong(), any())).thenReturn(new ArrayList<>());
 
         List<BookingForResponse> result = bookingService.getAll(userId, State.REJECTED, 0, 20);
 
@@ -306,9 +300,7 @@ class BookingServiceImplTest {
 
     @Test
     void getAllForItems_whenEmpty_returnEmptyList() {
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(itemForBooking));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
-        when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any())).thenReturn(new ArrayList<>());
 
         List<BookingForResponse> result = bookingService.getAll(userId, State.REJECTED, 0, 20);
 
@@ -318,8 +310,8 @@ class BookingServiceImplTest {
     @Test
     void getAllForItems_whenOK_returnAll() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(new User()));
-        when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any()))
-                .thenReturn(List.of(booking));
+        when(bookingRepository.findAllByOwnerIdOrderByStartDesc(anyLong(), any())).thenReturn(List.of(booking));
+        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(new Item()));
 
         List<BookingForResponse> result = bookingService.getAllForItems(userId, State.ALL, 0, 20);
 
