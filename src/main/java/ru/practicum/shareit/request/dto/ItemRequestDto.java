@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class ItemRequestDto {
     Long id;
     Long userId;
-    @NonNull
     @NotBlank
     String description;
     LocalDateTime created;

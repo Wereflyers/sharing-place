@@ -1,11 +1,13 @@
 package ru.practicum.shareit.booking;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingForResponse;
 import ru.practicum.shareit.item.dto.ItemShort;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dto.UserShort;
 
+@UtilityClass
 public class BookingMapper {
 
     public static BookingForResponse toBookingForResponse(Booking booking, Item item) {
