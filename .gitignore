@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/db/
+db/
 
 ### STS ###
 .apt_generated
@@ -19,6 +19,7 @@ target/
 *.iws
 *.iml
 *.ipr
+*.db
 
 ### NetBeans ###
 /nbproject/private/
