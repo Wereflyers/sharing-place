@@ -391,12 +391,6 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void validateForFindAll_whenWrongFromOrSize_thenThrowException() {
-        assertThrows(ValidationException.class, () -> bookingService.getAll(userId, State.ALL, -1, 2));
-        assertThrows(ValidationException.class, () -> bookingService.getAll(userId, State.ALL, 0, 0));
-    }
-
-    @Test
     void validateForFindAll_whenUserNotFound_throwException() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 

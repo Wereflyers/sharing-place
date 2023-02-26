@@ -15,7 +15,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Controller
-@RequestMapping(path = "/bookings")
+@RequestMapping(path = "/items")
 @RequiredArgsConstructor
 @Slf4j
 @Validated
@@ -49,9 +49,9 @@ public class ItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseEntity<Object> deleteItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
+    public void deleteItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
         log.info("Delete item {}, userId={}", itemId, userId);
-        return itemClient.deleteItem(userId, itemId);
+        itemClient.deleteItem(userId, itemId);
     }
 
     @GetMapping("/search")

@@ -77,12 +77,6 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getAllForUser_whenWrongFromOrPage_thenThrowException() {
-        assertThrows(ValidationException.class, () -> itemService.getAllForUser(userId, -1, 1));
-        assertThrows(ValidationException.class, () -> itemService.getAllForUser(userId, 1, -1));
-    }
-
-    @Test
     void getAllForUser_whenUserNotFound_thenThrowException() {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -136,35 +130,6 @@ class ItemServiceImplTest {
 
         assertEquals(result.getId(), itemId);
         assertEquals(result.getName(), item.getName());
-    }
-
-    @Test
-    void add_whenNotValidAvailable_returnException() {
-        itemDto.setAvailable(null);
-
-        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
-    }
-
-    @Test
-    void add_whenNotValidName_returnException() {
-        itemDto.setName(null);
-
-        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
-
-        itemDto.setName(" ");
-
-        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
-    }
-
-    @Test
-    void add_whenNotValidDescription_returnException() {
-        itemDto.setDescription(null);
-
-        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
-
-        itemDto.setDescription(" ");
-
-        assertThrows(ValidationException.class, () -> itemService.add(userId, itemDto));
     }
 
     @Test
@@ -244,12 +209,6 @@ class ItemServiceImplTest {
 
         verify(itemRepository, never()).search(anyString(), any());
         assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void search_whenWrongParameters_thenThrowException() {
-        assertThrows(ValidationException.class, () -> itemService.search("req", -1, 9));
-        assertThrows(ValidationException.class, () -> itemService.search("req", 0, -9));
     }
 
     @Test

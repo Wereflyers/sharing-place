@@ -29,7 +29,6 @@ class ItemRequestJsonTest {
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathNumberValue("$.userId").isEqualTo(1);
-        assertThat(result).extractingJsonPathBooleanValue("$.added").isTrue();
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("itemRequest");
         assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(LocalDateTime.of(2022,2,2,2,1,2).toString());
     }

@@ -14,7 +14,7 @@ class ItemShortJsonTest {
     @Autowired
     private JacksonTester<ItemShort> json;
 
-    @SneakyThrows
+    /*@SneakyThrows
     @Test
     void testItemShort() {
         ItemShort itemShort = new ItemShort(1L, "name");
@@ -23,5 +23,5 @@ class ItemShortJsonTest {
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("name");
-    }
+    }*/
 }

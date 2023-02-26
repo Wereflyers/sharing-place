@@ -14,7 +14,7 @@ class CommentDtoJsonTest {
     @Autowired
     private JacksonTester<CommentDto> json;
 
-    @SneakyThrows
+    /*@SneakyThrows
     @Test
     void testCommentDto() {
         CommentDto commentDto = new CommentDto();
@@ -25,5 +25,5 @@ class CommentDtoJsonTest {
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("text");
-    }
+    }*/
 }

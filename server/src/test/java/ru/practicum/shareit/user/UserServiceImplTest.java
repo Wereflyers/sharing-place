@@ -98,13 +98,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void add_whenEmailNull_thenThrowException() {
-        assertThrows(ValidationException.class, () -> userService.add(new UserDto()));
-
-        verify(userRepository, never()).save(any());
-    }
-
-    @Test
     void update_whenOK_thenUpdateFields() {
         User oldUser = new User();
         oldUser.setId(userId);

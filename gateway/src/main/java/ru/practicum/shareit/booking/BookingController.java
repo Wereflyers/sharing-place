@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +60,7 @@ public class BookingController {
 
 	@PatchMapping("/{bookingId}")
 	public ResponseEntity<Object> updateBooking(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable Long bookingId,
-												@RequestParam(name = "approved") @NonNull Boolean approved) {
+												@RequestParam(name = "approved") Boolean approved) {
 		log.info("Approve or reject booking by user {}", userId);
 		return bookingClient.updateBooking(userId, bookingId, approved);
 	}
