@@ -19,7 +19,7 @@ public interface ItemService {
 
     ItemForResponse update(long userId, long id, ItemDto itemDto);
 
-    void delete(long userId, long id);
+    ItemForResponse delete(long userId, long id);
 
     CommentForResponse addComment(long userId, long itemId, CommentDto commentDto);
 }

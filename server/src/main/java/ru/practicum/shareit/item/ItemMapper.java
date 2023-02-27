@@ -28,6 +28,7 @@ public class ItemMapper {
         return ItemForResponse.builder()
                 .id(item.getId())
                 .name(item.getName())
+                .ownerId(item.getOwnerId())
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .lastBooking(lastBooking)

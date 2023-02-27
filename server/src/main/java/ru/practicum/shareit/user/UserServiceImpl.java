@@ -69,9 +69,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(long id) {
-        if (userRepository.findById(id).isEmpty())
-            throw new NullPointerException("User " + id + "is not found.");
+    public UserDto delete(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NullPointerException("User " + id + "is not found."));
         userRepository.deleteById(id);
+        return UserMapper.toUserDto(user);
     }
 }

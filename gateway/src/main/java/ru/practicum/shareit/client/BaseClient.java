@@ -3,6 +3,7 @@ package ru.practicum.shareit.client;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -67,16 +68,16 @@ public class BaseClient {
         return makeAndSendRequest(HttpMethod.PATCH, path, userId, parameters, body);
     }
 
-    protected void delete(String path) {
-        delete(path, null, null);
+    protected <T> ResponseEntity<Object> delete(String path) {
+        return delete(path, null, null);
     }
 
-    protected void delete(String path, long userId) {
-        delete(path, userId, null);
+    protected <T> ResponseEntity<Object> delete(String path, long userId) {
+        return delete(path, userId, null);
     }
 
-    protected void delete(String path, Long userId, @Nullable Map<String, Object> parameters) {
-        makeAndSendRequest(HttpMethod.DELETE, path, userId, parameters, null);
+    protected <T> ResponseEntity<Object> delete(String path, Long userId, @Nullable Map<String, Object> parameters) {
+        return makeAndSendRequest(HttpMethod.DELETE, path, userId, parameters, null);
     }
 
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Long userId, @Nullable Map<String, Object> parameters, @Nullable T body) {

@@ -48,8 +48,8 @@ public class ItemClient extends BaseClient {
         return patch("/" + id, userId, itemDto);
     }
 
-    public void deleteItem(long userId, long id) {
-        delete("/" + id, userId);
+    public ResponseEntity<Object> deleteItem(long userId, long id) {
+        return delete("/" + id, userId);
     }
 
     public ResponseEntity<Object> searchItem(long userId, String text, int from, int size) {

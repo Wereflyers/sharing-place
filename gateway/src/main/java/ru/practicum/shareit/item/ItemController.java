@@ -24,7 +24,7 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<Object> getAll(@RequestHeader("X-Sharer-User-Id") long userId,
-                                        @RequestParam(defaultValue = "0") int from, @RequestParam(defaultValue = "100") int size) {
+                                        @RequestParam(defaultValue = "0") int from, @RequestParam(defaultValue = "10") int size) {
         log.info("Get items with userId={}, from = {}, size={}", userId, from, size);
         return itemClient.getItems(userId, from, size);
     }
@@ -49,9 +49,9 @@ public class ItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
+    public ResponseEntity<Object> deleteItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
         log.info("Delete item {}, userId={}", itemId, userId);
-        itemClient.deleteItem(userId, itemId);
+        return itemClient.deleteItem(userId, itemId);
     }
 
     @GetMapping("/search")

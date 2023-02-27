@@ -17,6 +17,7 @@ public class ItemForResponse {
     String description;
     Boolean available;
     Long requestId;
+    Long ownerId;
     BookingShort lastBooking;
     BookingShort nextBooking;
     List<CommentForResponse> comments;

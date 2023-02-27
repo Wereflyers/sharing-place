@@ -67,12 +67,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemForResponse update(long userId, long id, ItemDto itemDto) {
-        if (itemRepository.findById(id).isEmpty())
-            throw new NullPointerException("Item " + id + " is not found.");
-        if (itemRepository.findById(id).get().getOwnerId() != userId)
+        Item newItem = itemRepository.findById(id).orElseThrow(() -> new NullPointerException("Item " + id + " is not found."));
+        if (newItem.getOwnerId() != userId)
             throw new NullPointerException("You don't have proper rights.");
-        itemDto.setId(id);
-        Item newItem = itemRepository.findById(itemDto.getId()).get();
         if (itemDto.getName() != null)
             newItem.setName(itemDto.getName());
         if (itemDto.getDescription() != null)
@@ -84,12 +81,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void delete(long userId, long id) {
-        if (itemRepository.findById(id).isEmpty())
-            throw new NullPointerException("Item " + id + " is not found.");
-        if (itemRepository.findById(id).get().getOwnerId() != userId)
+    public ItemForResponse delete(long userId, long id) {
+        Item item = itemRepository.findById(id).orElseThrow(() -> new NullPointerException("Item " + id + " is not found."));
+        if (item.getOwnerId() != userId)
             throw new NullPointerException("You don't have proper rights.");
         itemRepository.deleteById(id);
+        return createResponse(item, userId);
     }
 
     @Override
