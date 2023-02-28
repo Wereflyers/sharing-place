@@ -45,7 +45,7 @@ create table if not exists BOOKINGS
     OWNER_ID   BIGINT                              not null,
     START_TIME  TIMESTAMP WITHOUT TIME ZONE        not null,
     END_TIME  TIMESTAMP WITHOUT TIME ZONE          not null,
-    STATUS     CHARACTER VARYING default 'WAITING' not null,
+    STATUS     CHARACTER VARYING                   not null,
     USER_ID    BIGINT                              not null,
     constraint BOOKINGS_PK
         primary key (ID),

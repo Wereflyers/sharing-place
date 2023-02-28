@@ -47,9 +47,7 @@ public class BookingServiceImpl implements BookingService {
         if (bookingDto.getStart().isAfter(bookingDto.getEnd())) {
             throw new ValidationException("Date is incorrect");
         }
-        if (bookingDto.getStatus() == null) {
-            bookingDto.setStatus(BookingStatus.WAITING);
-        }
+        bookingDto.setStatus(BookingStatus.WAITING);
         Long ownerId = itemRepository.findById(bookingDto.getItemId()).get().getOwnerId();
         return createResponse(bookingRepository.save(BookingMapper.toBookingWithoutId(bookingDto, userId, ownerId)));
     }

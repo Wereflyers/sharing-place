@@ -20,6 +20,7 @@ import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NullPointerException("User " + userId + " is not found");
         return itemRepository.findAllByOwnerId(userId, PageRequest.of(from / size, size)).stream()
                 .map(i -> createResponse(i, userId))
+                .sorted(Comparator.comparingLong(ItemForResponse::getId))
                 .collect(Collectors.toList());
     }
 
