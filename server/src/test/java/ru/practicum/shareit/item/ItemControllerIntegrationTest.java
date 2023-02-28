@@ -61,7 +61,9 @@ class ItemControllerIntegrationTest {
         when(itemService.getAllForUser(userId, 0, 100)).thenReturn(List.of(item));
 
         mockMvc.perform(get("/items")
-                        .header("X-Sharer-User-Id", userId))
+                        .header("X-Sharer-User-Id", userId)
+                        .param("from", "0")
+                        .param("size", "100"))
                         .andExpect(status().isOk());
 
         verify(itemService).getAllForUser(anyLong(), anyInt(), anyInt());
@@ -140,7 +142,9 @@ class ItemControllerIntegrationTest {
 
         mockMvc.perform(get("/items/search")
                         .header("X-Sharer-User-Id", userId)
-                        .param("text", "req"))
+                        .param("text", "req")
+                        .param("from", "0")
+                        .param("size", "100"))
                 .andExpect(status().isOk());
 
         verify(itemService).search("req", 0, 100);

@@ -23,7 +23,7 @@ public class ItemController {
 
     @GetMapping
     public List<ItemForResponse> getAll(@RequestHeader("X-Sharer-User-Id") long userId,
-                                        @RequestParam(defaultValue = "0") int from, @RequestParam(defaultValue = "100") int size) {
+                                        @RequestParam int from, @RequestParam int size) {
         return itemService.getAllForUser(userId, from, size);
     }
 
@@ -50,7 +50,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemForResponse> search(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam("text") String req,
-                                        @RequestParam(defaultValue = "0") int from, @RequestParam(defaultValue = "100") int size) {
+                                        @RequestParam int from, @RequestParam int size) {
         return itemService.search(req, from, size);
     }
 
