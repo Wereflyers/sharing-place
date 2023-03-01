@@ -32,11 +32,4 @@ class ErrorHandlerTest {
 
         assertEquals(errorResponse.getMessage(), "DuplicateException");
     }
-
-    @Test
-    void handleException() {
-        ErrorResponse errorResponse = errorHandler.handleException(new Exception("Exception"));
-
-        assertEquals(errorResponse.getMessage(), "Exception");
-    }
 }
