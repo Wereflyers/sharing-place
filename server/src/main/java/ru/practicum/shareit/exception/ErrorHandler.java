@@ -20,15 +20,8 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ValidationException e) {
+    public ErrorResponse handleException(final Exception e) {
         log.info("ValidationException " + Arrays.toString(e.getStackTrace()));
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleDuplicateException(final DuplicateException e) {
-        log.info("DuplicateException " + Arrays.toString(e.getStackTrace()));
         return new ErrorResponse(e.getMessage());
     }
 }

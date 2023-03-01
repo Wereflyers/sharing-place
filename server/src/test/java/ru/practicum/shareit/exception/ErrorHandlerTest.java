@@ -21,15 +21,8 @@ class ErrorHandlerTest {
 
     @Test
     void handleValidationException() {
-        ErrorResponse errorResponse = errorHandler.handleValidationException(new ValidationException("ValidationException"));
+        ErrorResponse errorResponse = errorHandler.handleException(new ValidationException("ValidationException"));
 
         assertEquals(errorResponse.getMessage(), "ValidationException");
-    }
-
-    @Test
-    void handleDuplicateException() {
-        ErrorResponse errorResponse = errorHandler.handleDuplicateException(new DuplicateException("DuplicateException"));
-
-        assertEquals(errorResponse.getMessage(), "DuplicateException");
     }
 }
