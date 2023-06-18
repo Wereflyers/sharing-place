@@ -1,3 +1,4 @@
-# java-shareit
-Shareit - возможность рассказывать, какими вещами люди готовы поделиться, находить нужную вещь и брать её в аренду на какое-то время. 
-Сервис не только позволяет бронировать вещь на определённые даты, но и закрывает к ней доступ на время бронирования от других желающих. На случай, если нужной вещи на сервисе нет, у пользователей есть возможность оставлять запросы. По запросу можно будет добавлять новые вещи для шеринга. 
+# sharing-place
+
+Sharing place is an opportunity to tell everybody what things people are willing to share, to find the thing you need, and to rent it for a while. 
+The service not only allows you to reserve an item for certain dates, but also closes access to it for the duration of the reservation from other people wishing to do so. In case the necessary thing is absent at the service users have the opportunity to leave requests. New items can be added for shering on request. 
